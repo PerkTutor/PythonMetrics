@@ -80,7 +80,6 @@ class PerkEvaluatorMetric:
     c1 = math.sqrt( vtk.vtkMath().Distance2BetweenPoints( endCurr, self.pointPrev ) )
     s1 = ( a1 + b1 + c1 ) / 2
     area1 = math.sqrt( s1 * ( s1 - a1 ) * ( s1 - b1 ) * ( s1 - c1 ) )
-    print s1
     
     # Calculate the second triangle area
     a2 = math.sqrt( vtk.vtkMath().Distance2BetweenPoints( endCurr, endPrev ) )   
@@ -88,11 +87,8 @@ class PerkEvaluatorMetric:
     c2 = math.sqrt( vtk.vtkMath().Distance2BetweenPoints( self.pointPrev, endPrev ) )
     s2 = ( a2 + b2 + c2 ) / 2
     area2 = math.sqrt( s2 * ( s2 - a2 ) * ( s2 - b2 ) * ( s2 - c2 ) )
-    print s2
     
     self.tissueDamage = self.tissueDamage + area1 + area2
-    #print B_Prev
-    #print E_Prev
     
     self.matrixPrev = vtk.vtkMatrix4x4()
     self.matrixPrev.DeepCopy( matrix )

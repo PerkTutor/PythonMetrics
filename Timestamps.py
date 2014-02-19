@@ -21,7 +21,6 @@ class PerkEvaluatorMetric:
     self.numTimestamps = 0
     
   def AddTimestamp( self, time, matrix, point ):
-    print time
     self.numTimestamps += 1
     
   def Finalize( self ):
