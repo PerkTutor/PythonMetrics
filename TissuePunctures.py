@@ -45,9 +45,6 @@ class PerkEvaluatorMetric:
     matrix.MultiplyPoint( NeedleTipForward, NeedleTipForwardPosition )
     matrix.MultiplyPoint( NeedleTipBackward, NeedleTipBackwardPosition )
     
-    print NeedleTipPosition
-    print NeedleTipForwardPosition
-    
     NeedleTipInside = self.enclosedFilter.IsInsideSurface( NeedleTipPosition[0], NeedleTipPosition[1], NeedleTipPosition[2] )
     NeedleTipForwardInside = self.enclosedFilter.IsInsideSurface( NeedleTipForwardPosition[0], NeedleTipForwardPosition[1], NeedleTipForwardPosition[2] )
     NeedleTipBackwardInside = self.enclosedFilter.IsInsideSurface( NeedleTipBackwardPosition[0], NeedleTipBackwardPosition[1], NeedleTipBackwardPosition[2] )
@@ -60,8 +57,6 @@ class PerkEvaluatorMetric:
     if ( self.punctureState ):
       if ( NeedleTipInside == False and NeedleTipForwardInside == False and NeedleTipBackwardInside == False ):
         self.punctureState = False
-        
-    print self.punctureState
     
   def Finalize( self ):
     pass
