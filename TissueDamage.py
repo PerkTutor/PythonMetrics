@@ -51,7 +51,7 @@ class PerkEvaluatorMetric:
       return
       
     # Find the base points (assume needle in y direction)
-    NeedleBase = [ 0, 300, 0, 1 ]
+    NeedleBase = [ 300, 0, 0, 1 ]
     basePrev = [ 0, 0, 0, 1 ]
     baseCurr = [ 0, 0, 0, 1 ]
     self.matrixPrev.MultiplyPoint( NeedleBase, basePrev )

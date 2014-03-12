@@ -36,9 +36,9 @@ class PerkEvaluatorMetric:
     # Find the three key points on the needle
     NeedleTip = [ 0, 0, 0, 1 ]
     NeedleTipPosition = [ 0, 0, 0, 1 ]
-    NeedleTipForward = [ 0, -PerkEvaluatorMetric.PUNCTURE_THRESHOLD, 0, 1 ]
+    NeedleTipForward = [ -PerkEvaluatorMetric.PUNCTURE_THRESHOLD, 0, 0, 1 ]
     NeedleTipForwardPosition = [ 0, 0, 0, 1 ]
-    NeedleTipBackward = [ 0, PerkEvaluatorMetric.PUNCTURE_THRESHOLD, 0, 1 ]
+    NeedleTipBackward = [ PerkEvaluatorMetric.PUNCTURE_THRESHOLD, 0, 0, 1 ]
     NeedleTipBackwardPosition = [ 0, 0, 0, 1 ]
     
     matrix.MultiplyPoint( NeedleTip, NeedleTipPosition )
