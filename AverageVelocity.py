@@ -28,6 +28,9 @@ class PerkEvaluatorMetric:
     
   def AddTimestamp( self, time, matrix, point ):
   
+    if ( time == self.timePrev ):
+      return
+  
     if ( self.timePrev != None and self.pointPrev != None ):
       currPath = math.sqrt( math.pow( point[0] - self.pointPrev[0], 2 ) + math.pow( point[1] - self.pointPrev[1], 2 ) + math.pow( point[2] - self.pointPrev[2], 2 ) )
       self.velocitySum = self.velocitySum + currPath / ( time - self.timePrev )

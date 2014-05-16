@@ -30,6 +30,9 @@ class PerkEvaluatorMetric:
     self.timePrev3 = None
     
   def AddTimestamp( self, time, matrix, point ):
+  
+    if ( time == self.timePrev1 or time == self.timePrev2 or time == self.timePrev3 ):
+      return
 
     if ( self.pointPrev3 == None or self.timePrev3 == None ):
       if ( self.pointPrev2 != None and self.timePrev2 != None ):

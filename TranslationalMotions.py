@@ -31,6 +31,9 @@ class PerkEvaluatorMetric:
     
   def AddTimestamp( self, time, matrix, point ):
   
+    if ( time == self.timePrev ):
+      return
+    
     if ( self.timePrev == None or self.matrixPrev == None ):
       self.timePrev = time
       self.matrixPrev = vtk.vtkMatrix4x4()
