@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource>
+    <file>ElapsedTime.py</file>
+    <file>PathLength.py</file>
+    <file>TissueDamage.py</file>
+    <file>TissuePath.py</file>
+    <file>TissueTime.py</file>
+  </qresource>
+</RCC>
