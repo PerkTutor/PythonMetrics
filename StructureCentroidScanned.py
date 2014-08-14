@@ -13,7 +13,7 @@ class PerkEvaluatorMetric:
     self.Initialize( None )
   
   def GetMetricName( self ):
-    return "Structure Scanned?"
+    return "Structure Centroid Scanned?"
     
   def GetMetricUnit( self ):
     return "True/False"
