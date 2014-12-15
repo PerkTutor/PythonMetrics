@@ -4,7 +4,7 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Time in Tissue"
@@ -12,18 +12,19 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "s"
     
-  def RequiresTissueNode( self ):
-    return True
+  def GetAcceptedTransformRoles( self ):
+    return [ "Needle" ]
     
-  def RequiresNeedle( self ):
-    return False
-
-  def Initialize( self, tissueNode ):
-    self.tissueNode = tissueNode
-    if ( self.tissueNode != None ):
+  def GetRequiredAnatomyRoles( self ):
+    return [ "Tissue" ]
+    
+  def AddAnatomyRole( self, role, node ):
+    if ( role == "Tissue" and node != None ):
+      self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
-      self.enclosedFilter.Initialize( tissueNode.GetPolyData() )
-      
+      self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )
+
+  def Initialize( self ):
     self.tissueTime = 0
     
     self.timePrev = None
