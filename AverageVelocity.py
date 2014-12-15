@@ -3,7 +3,7 @@ import math
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Average Velocity"
@@ -11,13 +11,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "mm/s"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     self.velocitySum = 0
     self.timestampCount = 0
     self.averageVelocity = 0

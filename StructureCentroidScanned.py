@@ -10,7 +10,7 @@ class PerkEvaluatorMetric:
   IMAGE_Y_EXTENT = 512 #pixels
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Structure Centroid Scanned?"
@@ -18,23 +18,24 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "True/False"
     
-  def RequiresTissueNode( self ):
-    return True
+  def GetAcceptedTransformRoles( self ):
+    return [ "Ultrasound" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return [ "Target" ]
     
-  def Initialize( self, tissueNode ):
-    self.tissueNode = tissueNode
-    if ( self.tissueNode != None ):
+  def AddAnatomyRole( self, role, node ):
+    if ( role == "Target" and node != None ):
+      self.targetNode = node
       comFilter = vtk.vtkCenterOfMass()
-      comFilter.SetInputData( tissueNode.GetPolyData() )
+      comFilter.SetInputData( self.targetNode.GetPolyData() )
       comFilter.SetUseScalarsAsWeights( False )
       comFilter.Update()
       
       self.centerPoint = comFilter.GetCenter()
       self.centerPoint_RAS = [ self.centerPoint[0], self.centerPoint[1], self.centerPoint[2], 1 ]
-      
+    
+  def Initialize( self ):      
     self.structureScanned = 0
     
   def AddTimestamp( self, time, matrix, point ):

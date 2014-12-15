@@ -11,7 +11,7 @@ class PerkEvaluatorMetric:
   MIN_PEAK_HEIGHT = 50 #mm/s
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Translational Velocity Peaks"
@@ -19,13 +19,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "count"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     self.velocityPeaks = 0
     
     self.beforeVelocities = [ ]
@@ -69,9 +72,6 @@ class PerkEvaluatorMetric:
     vtk.vtkMath().MultiplyScalar( currVelocity, 1 / ( time - self.timePrev ) )
     currAbsVelocity = math.sqrt( currVelocity[ 0 ] * currVelocity[ 0 ] + currVelocity[ 1 ] * currVelocity[ 1 ] + currVelocity[ 2 ] * currVelocity[ 2 ] )
     
-    #print time
-    #print currAbsVelocity
-    
     # Find the before/present/after times
     self.afterTimes.append( time )
     self.afterVelocities.append( currAbsVelocity )
@@ -95,9 +95,6 @@ class PerkEvaluatorMetric:
     # Check if the largest is present. If so, then it is a peak    
     if ( ( presentMax - beforeMax ) > PerkEvaluatorMetric.MIN_PEAK_DIFFERENCE and ( presentMax - afterMax ) > PerkEvaluatorMetric.MIN_PEAK_DIFFERENCE and presentMax > PerkEvaluatorMetric.MIN_PEAK_HEIGHT ):
       self.velocityPeaks += 1
-      #print "Before", self.beforeTimes
-      #print "Present", self.presentTimes
-      #print "After", self.afterTimes
       
     # Find the before times
     while( len( self.presentTimes ) > 0 ):

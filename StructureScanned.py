@@ -8,7 +8,7 @@ class PerkEvaluatorMetric:
   IMAGE_Y_EXTENT = 1000 #pixels
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Structure Scanned?"
@@ -16,26 +16,26 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "True/False"
     
-  def RequiresTissueNode( self ):
-    return True
+  def GetAcceptedTransformRoles( self ):
+    return [ "Ultrasound" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return [ "Target" ]
     
-  def Initialize( self, tissueNode ):
-    self.tissueNode = tissueNode
-    
-    if ( self.tissueNode != None ):     
+  def AddAnatomyRole( self, role, node ):
+    if ( role == "Target" and node != None ):
+      self.targetNode = node
       self.bspTree = vtk.vtkModifiedBSPTree()
-      self.bspTree.SetDataSet( self.tissueNode.GetPolyData() )
+      self.bspTree.SetDataSet( self.targetNode.GetPolyData() )
       self.bspTree.BuildLocator()
-      
+    
+  def Initialize( self ):     
     self.structureScanned = 0    
     
     
   def AddTimestamp( self, time, matrix, point ):
 
-    if ( self.tissueNode == None or self.bspTree == None ):
+    if ( self.targetNode == None or self.bspTree == None ):
       return
       
     # To speed things up, if the structure has already been scanned, then skip

@@ -8,7 +8,7 @@ class PerkEvaluatorMetric:
   TIME_THRESHOLD = 0.2 #s
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Rotational Actions"
@@ -16,13 +16,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "count"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     self.numActions = 0
     
     self.actionState = 0

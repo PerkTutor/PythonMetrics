@@ -3,7 +3,7 @@
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Timestamps"
@@ -11,13 +11,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "count"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     self.numTimestamps = 0
     
   def AddTimestamp( self, time, matrix, point ):
