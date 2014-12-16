@@ -4,8 +4,10 @@ import vtk
 class PerkEvaluatorMetric:
 
   # Image extent
-  IMAGE_X_EXTENT = 1000 #pixels
-  IMAGE_Y_EXTENT = 1000 #pixels
+  IMAGE_X_MIN = 173 #pixels
+  IMAGE_X_MAX = 793 #pixels
+  IMAGE_Y_MIN = 153 #pixels
+  IMAGE_Y_MAX = 625 #pixels
 
   def __init__( self ):
     pass
@@ -50,10 +52,10 @@ class PerkEvaluatorMetric:
     
     # For each scan line
     # Assume the x-axis is equivalent to the marked-unmarked axis
-    for i in range( PerkEvaluatorMetric.IMAGE_X_EXTENT ):
+    for i in range( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_X_MAX ):
       # Find end points of the current scan line in the Image coordinate system
-      startPoint_Image = [ i, 0, 0, 1 ]
-      endPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_EXTENT, 0, 1 ]
+      startPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_MIN, 0, 1 ]
+      endPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_MAX, 0, 1 ]
       
       # Transform the end points into the RAS coordinate system
       startPoint_RAS = [ 0, 0, 0, 1 ]
