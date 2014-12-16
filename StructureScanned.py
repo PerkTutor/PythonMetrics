@@ -23,11 +23,15 @@ class PerkEvaluatorMetric:
     return [ "Target" ]
     
   def AddAnatomyRole( self, role, node ):
-    if ( role == "Target" and node != None ):
+    if ( role == "Target" and node != None and node.GetClassName() == "vtkMRMLModelNode" ):
       self.targetNode = node
       self.bspTree = vtk.vtkModifiedBSPTree()
       self.bspTree.SetDataSet( self.targetNode.GetPolyData() )
       self.bspTree.BuildLocator()
+      
+      return True
+      
+    return False
     
   def Initialize( self ):     
     self.structureScanned = 0    

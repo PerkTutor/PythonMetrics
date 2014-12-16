@@ -21,10 +21,14 @@ class PerkEvaluatorMetric:
     return [ "Tissue" ]
     
   def AddAnatomyRole( self, role, node ):
-    if ( role == "Tissue" and node != None ):
+    if ( role == "Tissue" and node != None and node.GetClassName() == "vtkMRMLModelNode" ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
       self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )
+      
+      return True
+      
+    return False
     
   def Initialize( self ):
     self.tissuePunctures = 0

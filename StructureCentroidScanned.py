@@ -25,7 +25,7 @@ class PerkEvaluatorMetric:
     return [ "Target" ]
     
   def AddAnatomyRole( self, role, node ):
-    if ( role == "Target" and node != None ):
+    if ( role == "Target" and node != None and node.GetClassName() == "vtkMRMLModelNode" ):
       self.targetNode = node
       comFilter = vtk.vtkCenterOfMass()
       comFilter.SetInputData( self.targetNode.GetPolyData() )
@@ -34,6 +34,10 @@ class PerkEvaluatorMetric:
       
       self.centerPoint = comFilter.GetCenter()
       self.centerPoint_RAS = [ self.centerPoint[0], self.centerPoint[1], self.centerPoint[2], 1 ]
+      
+      return True
+      
+    return False
     
   def Initialize( self ):      
     self.structureScanned = 0

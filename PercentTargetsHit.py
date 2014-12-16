@@ -34,9 +34,13 @@ class PerkEvaluatorMetric:
     return [ "POIs" ]
     
   def AddAnatomyRole( self, role, node ):
-    if ( role == "POIs" and node != None ):
+    if ( role == "POIs" and node != None and node.GetClassName() == "vtkMRMLMarkupsFiducialNode" ):
       self.targets = node  
       self.hitTargets = [ 0 ] * self.targets.GetNumberOfFiducials()
+      
+      return True
+      
+    return False
     
   def Initialize( self ):   
     self.percentHit = 0
