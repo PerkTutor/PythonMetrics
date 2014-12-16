@@ -19,7 +19,7 @@ class PerkEvaluatorMetric:
     return [ "Tissue" ]
     
   def AddAnatomyRole( self, role, node ):
-    if ( role == "Tissue" and node != None ):
+    if ( role == "Tissue" and node.GetClassName() == "vtkMRMLModelNode" and node != None ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
       self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )
@@ -27,6 +27,10 @@ class PerkEvaluatorMetric:
       self.bspTree = vtk.vtkModifiedBSPTree()
       self.bspTree.SetDataSet( self.tissueNode.GetPolyData() )
       self.bspTree.BuildLocator()
+      
+      return True
+      
+    return False
     
     
   def Initialize( self ):
