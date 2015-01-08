@@ -4,7 +4,7 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Depth Perception"
@@ -12,13 +12,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "mm"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Needle" ]
     
-  def RequiresNeedle( self ):
-    return True
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     self.depthPerception = 0 
     self.pointPrev = None    
     

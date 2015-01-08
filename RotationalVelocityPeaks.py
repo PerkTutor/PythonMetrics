@@ -11,7 +11,7 @@ class PerkEvaluatorMetric:
   MIN_PEAK_HEIGHT = 20 #deg/s
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Rotational Velocity Peaks"
@@ -19,13 +19,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "count"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     self.velocityPeaks = 0
     
     self.beforeVelocities = [ ]
@@ -74,9 +77,6 @@ class PerkEvaluatorMetric:
     
     currAbsAngularVelocity = abs( currAngularVelocity[ 0 ] ) 
     
-    #print time
-    #print currAbsAngularVelocity
-    
     # Find the before/present/after times
     self.afterTimes.append( time )
     self.afterVelocities.append( currAbsAngularVelocity )
@@ -100,9 +100,6 @@ class PerkEvaluatorMetric:
     # Check if the largest is present. If so, then it is a peak    
     if ( ( presentMax - beforeMax ) > PerkEvaluatorMetric.MIN_PEAK_DIFFERENCE and ( presentMax - afterMax ) > PerkEvaluatorMetric.MIN_PEAK_DIFFERENCE and presentMax > PerkEvaluatorMetric.MIN_PEAK_HEIGHT ):
       self.velocityPeaks += 1
-      #print "Before", self.beforeTimes
-      #print "Present", self.presentTimes
-      #print "After", self.afterTimes
       
     # Find the before times
     while( len( self.presentTimes ) > 0 ):

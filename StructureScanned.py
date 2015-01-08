@@ -4,11 +4,13 @@ import vtk
 class PerkEvaluatorMetric:
 
   # Image extent
-  IMAGE_X_EXTENT = 1000 #pixels
-  IMAGE_Y_EXTENT = 1000 #pixels
+  IMAGE_X_MIN = 173 #pixels
+  IMAGE_X_MAX = 793 #pixels
+  IMAGE_Y_MIN = 153 #pixels
+  IMAGE_Y_MAX = 625 #pixels
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Structure Scanned?"
@@ -16,26 +18,30 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "True/False"
     
-  def RequiresTissueNode( self ):
-    return True
+  def GetAcceptedTransformRoles( self ):
+    return [ "Ultrasound" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return [ "Target" ]
     
-  def Initialize( self, tissueNode ):
-    self.tissueNode = tissueNode
-    
-    if ( self.tissueNode != None ):     
+  def AddAnatomyRole( self, role, node ):
+    if ( role == "Target" and node != None and node.GetClassName() == "vtkMRMLModelNode" ):
+      self.targetNode = node
       self.bspTree = vtk.vtkModifiedBSPTree()
-      self.bspTree.SetDataSet( self.tissueNode.GetPolyData() )
+      self.bspTree.SetDataSet( self.targetNode.GetPolyData() )
       self.bspTree.BuildLocator()
       
+      return True
+      
+    return False
+    
+  def Initialize( self ):     
     self.structureScanned = 0    
     
     
   def AddTimestamp( self, time, matrix, point ):
 
-    if ( self.tissueNode == None or self.bspTree == None ):
+    if ( self.targetNode == None or self.bspTree == None ):
       return
       
     # To speed things up, if the structure has already been scanned, then skip
@@ -46,10 +52,10 @@ class PerkEvaluatorMetric:
     
     # For each scan line
     # Assume the x-axis is equivalent to the marked-unmarked axis
-    for i in range( PerkEvaluatorMetric.IMAGE_X_EXTENT ):
+    for i in range( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_X_MAX ):
       # Find end points of the current scan line in the Image coordinate system
-      startPoint_Image = [ i, 0, 0, 1 ]
-      endPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_EXTENT, 0, 1 ]
+      startPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_MIN, 0, 1 ]
+      endPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_MAX, 0, 1 ]
       
       # Transform the end points into the RAS coordinate system
       startPoint_RAS = [ 0, 0, 0, 1 ]

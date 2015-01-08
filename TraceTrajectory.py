@@ -5,7 +5,7 @@ import slicer
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Display Trajectory"
@@ -13,13 +13,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "display"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     
     self.curvePoints = vtk.vtkPoints()
     self.curveLines = vtk.vtkCellArray()
@@ -29,7 +32,20 @@ class PerkEvaluatorMetric:
     self.curvePolyData.SetPoints( self.curvePoints )
     self.curvePolyData.SetLines( self.curveLines )
     
-
+    # Turn the polydata into a model    
+    curveModel = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelNode" )
+    curveModel.SetAndObservePolyData( self.curvePolyData )
+    curveModel.SetName( "TrajectoryTrace" )
+    curveModel.SetScene( slicer.mrmlScene )
+  
+    curveModelDisplay = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelDisplayNode" )
+    curveModelDisplay.SetScene( slicer.mrmlScene )
+    curveModelDisplay.SetInputPolyDataConnection( curveModel.GetPolyDataConnection() )
+  
+    slicer.mrmlScene.AddNode( curveModelDisplay )
+    slicer.mrmlScene.AddNode( curveModel )
+  
+    curveModel.SetAndObserveDisplayNodeID( curveModelDisplay.GetID() )
     
     
   def AddTimestamp( self, time, matrix, point ):
@@ -49,20 +65,7 @@ class PerkEvaluatorMetric:
 
     
   def Finalize( self ):
-    # Turn the polydata into a model    
-    curveModel = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelNode" )
-    curveModel.SetAndObservePolyData( self.curvePolyData )
-    curveModel.SetName( "TrajectoryTrace" )
-    curveModel.SetScene( slicer.mrmlScene )
-  
-    curveModelDisplay = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelDisplayNode" )
-    curveModelDisplay.SetScene( slicer.mrmlScene )
-    curveModelDisplay.SetInputPolyDataConnection( curveModel.GetPolyDataConnection() )
-  
-    slicer.mrmlScene.AddNode( curveModelDisplay )
-    slicer.mrmlScene.AddNode( curveModel )
-  
-    curveModel.SetAndObserveDisplayNodeID( curveModelDisplay.GetID() )
+    pass
     
   def GetMetric( self ):
     return 0

@@ -11,7 +11,7 @@ class PerkEvaluatorMetric:
   IMAGE_Y_MAX = 625 #pixels
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Display Ultrasound Sweep"
@@ -19,13 +19,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "display"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Ultrasound" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     
     planeSource = vtk.vtkPlaneSource()
     planeSource.SetOrigin( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_Y_MIN, 0 )
@@ -36,6 +39,22 @@ class PerkEvaluatorMetric:
     self.planePolyData = planeSource.GetOutput()
     
     self.sweptPolyData = vtk.vtkAppendPolyData()
+    
+    sweepModel = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelNode" )
+    sweepModel.SetAndObservePolyData( self.sweptPolyData.GetOutput() )
+    sweepModel.SetName( "UltrasoundSweep" )
+    sweepModel.SetScene( slicer.mrmlScene )
+  
+    sweepModelDisplay = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelDisplayNode" )
+    sweepModelDisplay.FrontfaceCullingOff()
+    sweepModelDisplay.BackfaceCullingOff()
+    sweepModelDisplay.SetScene( slicer.mrmlScene )
+    sweepModelDisplay.SetInputPolyDataConnection( sweepModel.GetPolyDataConnection() )
+  
+    slicer.mrmlScene.AddNode( sweepModelDisplay )
+    slicer.mrmlScene.AddNode( sweepModel )
+  
+    sweepModel.SetAndObserveDisplayNodeID( sweepModelDisplay.GetID() )
     
     
   def AddTimestamp( self, time, matrix, point ):
@@ -54,21 +73,7 @@ class PerkEvaluatorMetric:
     # Turn the polydata into a model
     self.sweptPolyData.Update()
     
-    sweepModel = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelNode" )
-    sweepModel.SetAndObservePolyData( self.sweptPolyData.GetOutput() )
-    sweepModel.SetName( "UltrasoundSweep" )
-    sweepModel.SetScene( slicer.mrmlScene )
-  
-    sweepModelDisplay = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelDisplayNode" )
-    sweepModelDisplay.FrontfaceCullingOff()
-    sweepModelDisplay.BackfaceCullingOff()
-    sweepModelDisplay.SetScene( slicer.mrmlScene )
-    sweepModelDisplay.SetInputPolyDataConnection( sweepModel.GetPolyDataConnection() )
-  
-    slicer.mrmlScene.AddNode( sweepModelDisplay )
-    slicer.mrmlScene.AddNode( sweepModel )
-  
-    sweepModel.SetAndObserveDisplayNodeID( sweepModelDisplay.GetID() )
+
     
   def GetMetric( self ):
     return 0

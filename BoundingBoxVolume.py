@@ -3,7 +3,7 @@ import math
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Bounding Box Volume"
@@ -11,13 +11,16 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "mm^3"
     
-  def RequiresTissueNode( self ):
-    return False
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
     
-  def RequiresNeedle( self ):
-    return False
+  def GetRequiredAnatomyRoles( self ):
+    return []
     
-  def Initialize( self, tissueNode ):
+  def AddAnatomyRole( self, role, node ):
+    pass
+    
+  def Initialize( self ):
     self.minX = None
     self.minY = None
     self.minZ = None
