@@ -4,7 +4,7 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.Initialize( None )
+    pass
   
   def GetMetricName( self ):
     return "Path in Tissue"
@@ -12,18 +12,23 @@ class PerkEvaluatorMetric:
   def GetMetricUnit( self ):
     return "mm"
     
-  def RequiresTissueNode( self ):
-    return True
+  def GetAcceptedTransformRoles( self ):
+    return [ "Needle" ]
     
-  def RequiresNeedle( self ):
+  def GetRequiredAnatomyRoles( self ):
+    return [ "Tissue" ]
+    
+  def AddAnatomyRole( self, role, node ):
+    if ( role == "Tissue" and node != None and node.GetClassName() == "vtkMRMLModelNode" ):
+      self.tissueNode = node
+      self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
+      self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )
+      
+      return True
+      
     return False
     
-  def Initialize( self, tissueNode ):
-    self.tissueNode = tissueNode
-    if ( self.tissueNode != None ):
-      self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
-      self.enclosedFilter.Initialize( tissueNode.GetPolyData() )
-      
+  def Initialize( self ):      
     self.tissuePathLength = 0
     
     self.pointPrev = None
