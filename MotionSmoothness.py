@@ -4,7 +4,15 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.squaredJerk = 0
+    
+    self.pointPrev1 = None
+    self.pointPrev2 = None
+    self.pointPrev3 = None
+    
+    self.timePrev1 = None
+    self.timePrev2 = None
+    self.timePrev3 = None
   
   def GetMetricName( self ):
     return "Motion Smoothness"
@@ -20,17 +28,6 @@ class PerkEvaluatorMetric:
     
   def AddAnatomyRole( self, role, node ):
     pass
-    
-  def Initialize( self ):
-    self.squaredJerk = 0
-    
-    self.pointPrev1 = None
-    self.pointPrev2 = None
-    self.pointPrev3 = None
-    
-    self.timePrev1 = None
-    self.timePrev2 = None
-    self.timePrev3 = None
     
   def AddTimestamp( self, time, matrix, point ):
   
@@ -89,10 +86,7 @@ class PerkEvaluatorMetric:
     self.timePrev2 = self.timePrev1
     self.pointPrev1 = point[:] # Require element copy 
     self.timePrev1 = time
-    
-    
-  def Finalize( self ):
-    pass
+
     
   def GetMetric( self ):
     return math.sqrt( self.squaredJerk )

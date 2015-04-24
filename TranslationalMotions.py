@@ -6,7 +6,12 @@ class PerkEvaluatorMetric:
   VELOCITY_THRESHOLD = 7.5 #mm/s
 
   def __init__( self ):
-    pass
+    self.numMotions = 0
+    
+    self.rateTransformPrev = None
+    
+    self.timePrev = None
+    self.matrixPrev = None
   
   def GetMetricName( self ):
     return "Translational Motions"
@@ -22,16 +27,7 @@ class PerkEvaluatorMetric:
     
   def AddAnatomyRole( self, role, node ):
     pass
-    
-  def Initialize( self ):
-    self.numMotions = 0
-    
-    self.rateTransformPrev = None
-    
-    self.timePrev = None
-    self.matrixPrev = None
-    
-    
+
   def AddTimestamp( self, time, matrix, point ):
   
     if ( time == self.timePrev ):
@@ -91,9 +87,6 @@ class PerkEvaluatorMetric:
     self.matrixPrev = vtk.vtkMatrix4x4()
     self.matrixPrev.DeepCopy( matrix )
 
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return self.numMotions

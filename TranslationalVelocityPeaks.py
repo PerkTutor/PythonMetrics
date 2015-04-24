@@ -11,7 +11,19 @@ class PerkEvaluatorMetric:
   MIN_PEAK_HEIGHT = 50 #mm/s
 
   def __init__( self ):
-    pass
+    self.velocityPeaks = 0
+    
+    self.beforeVelocities = [ ]
+    self.beforeTimes = [ ]
+    
+    self.afterVelocities = [ ]
+    self.afterTimes = [ ]
+    
+    self.presentVelocities = [ ]
+    self.presentTimes = [ ]
+    
+    self.timePrev = None
+    self.matrixPrev = None
   
   def GetMetricName( self ):
     return "Translational Velocity Peaks"
@@ -27,22 +39,7 @@ class PerkEvaluatorMetric:
     
   def AddAnatomyRole( self, role, node ):
     pass
-    
-  def Initialize( self ):
-    self.velocityPeaks = 0
-    
-    self.beforeVelocities = [ ]
-    self.beforeTimes = [ ]
-    
-    self.afterVelocities = [ ]
-    self.afterTimes = [ ]
-    
-    self.presentVelocities = [ ]
-    self.presentTimes = [ ]
-    
-    self.timePrev = None
-    self.matrixPrev = None
-    
+
     
   def AddTimestamp( self, time, matrix, point ):
   
@@ -109,9 +106,6 @@ class PerkEvaluatorMetric:
     self.matrixPrev = vtk.vtkMatrix4x4()
     self.matrixPrev.DeepCopy( matrix )
 
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return self.velocityPeaks

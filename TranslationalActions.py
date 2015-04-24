@@ -8,7 +8,13 @@ class PerkEvaluatorMetric:
   TIME_THRESHOLD = 0.2 #s
 
   def __init__( self ):
-    pass
+    self.numActions = 0
+    
+    self.actionState = 0
+    self.completeActionTime = 0
+    
+    self.timePrev = None
+    self.matrixPrev = None
   
   def GetMetricName( self ):
     return "Translational Actions"
@@ -24,16 +30,6 @@ class PerkEvaluatorMetric:
     
   def AddAnatomyRole( self, role, node ):
     pass
-    
-  def Initialize( self ):
-    self.numActions = 0
-    
-    self.actionState = 0
-    self.completeActionTime = 0
-    
-    self.timePrev = None
-    self.matrixPrev = None
-    
     
   def AddTimestamp( self, time, matrix, point ):
   
@@ -77,9 +73,5 @@ class PerkEvaluatorMetric:
     self.matrixPrev = vtk.vtkMatrix4x4()
     self.matrixPrev.DeepCopy( matrix )
 
-    
-  def Finalize( self ):
-    pass
-    
   def GetMetric( self ):
     return self.numActions

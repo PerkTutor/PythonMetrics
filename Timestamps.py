@@ -3,7 +3,7 @@
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.numTimestamps = 0
   
   def GetMetricName( self ):
     return "Timestamps"
@@ -20,14 +20,8 @@ class PerkEvaluatorMetric:
   def AddAnatomyRole( self, role, node ):
     pass
     
-  def Initialize( self ):
-    self.numTimestamps = 0
-    
   def AddTimestamp( self, time, matrix, point ):
     self.numTimestamps += 1
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return self.numTimestamps

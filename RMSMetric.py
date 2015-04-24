@@ -1,9 +1,14 @@
 import math
 
+# TODO: Make this work in real-time
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.xList=[]
+    self.yList=[]
+    self.zList=[]
+    
+    self.pointCounter=0
   
   def GetMetricName( self ):
     return "RMS"
@@ -20,14 +25,7 @@ class PerkEvaluatorMetric:
   def AddAnatomyRole( self, role, node ):
     pass
     
-  def Initialize( self ): 
-    self.xList=[]
-    self.yList=[]
-    self.zList=[]
     
-    self.pointCounter=0
-	
-	    
   def AddTimestamp( self, time, matrix, point ):
     #this does not need to be iterative because Finalize will work with the lists I am creating 	
     self.xList.append(point[0])
@@ -36,7 +34,7 @@ class PerkEvaluatorMetric:
     self.pointCounter+=1
     
     
-  def Finalize( self ):
+  def GetMetric( self ):
     meanX=0
     meanY=0
     meanZ=0
@@ -51,7 +49,5 @@ class PerkEvaluatorMetric:
 	
     for i in range (0,len(self.xList)):
       sumofcoordinates=sumofcoordinates+((self.xList[i]-meanX)**2)+((self.yList[i]-meanY)**2)+((self.zList[i]-meanZ)**2)
-    self.RMS=math.sqrt(sumofcoordinates/self.pointCounter)	
     
-  def GetMetric( self ):
-    return self.RMS
+    return math.sqrt(sumofcoordinates/self.pointCounter)	
