@@ -4,7 +4,10 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.tissueDamage = 0
+    
+    self.matrixPrev = None
+    self.pointPrev = None
   
   def GetMetricName( self ):
     return "Tissue Damage"
@@ -30,15 +33,7 @@ class PerkEvaluatorMetric:
       
       return True
       
-    return False
-    
-    
-  def Initialize( self ):
-    self.tissueDamage = 0
-    
-    self.matrixPrev = None
-    self.pointPrev = None
-    
+    return False 
     
     
   def AddTimestamp( self, time, matrix, point ):
@@ -98,9 +93,7 @@ class PerkEvaluatorMetric:
     self.matrixPrev = vtk.vtkMatrix4x4()
     self.matrixPrev.DeepCopy( matrix )
     self.pointPrev = point[:] # Require element copy 
-    
-  def Finalize( self ):
-    pass
+
     
   def GetMetric( self ):
     return self.tissueDamage
