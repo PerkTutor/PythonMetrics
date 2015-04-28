@@ -1,14 +1,18 @@
 import math
 
-# TODO: Make this work in real-time
+# Use Welford's algorithm - this works in real-time and is robust
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    self.xList=[]
-    self.yList=[]
-    self.zList=[]
+    self.Mx = None
+    self.My = None
+    self.Mz = None
     
-    self.pointCounter=0
+    self.Sx = None
+    self.Sy = None
+    self.Sz = None
+
+    self.count = 0
   
   def GetMetricName( self ):
     return "RMS"
@@ -27,27 +31,31 @@ class PerkEvaluatorMetric:
     
     
   def AddTimestamp( self, time, matrix, point ):
-    #this does not need to be iterative because Finalize will work with the lists I am creating 	
-    self.xList.append(point[0])
-    self.yList.append(point[1])
-    self.zList.append(point[2])
-    self.pointCounter+=1
+    
+    if ( self.count == 0 ):
+      self.count += 1
+      self.Mx = point[ 0 ]
+      self.My = point[ 1 ]
+      self.Mz = point[ 2 ]
+      self.Sx = 0
+      self.Sy = 0
+      self.Sz = 0
+      return
+      
+    self.count += 1
+    
+    # Each dimension for variance
+    self.Sx = self.Sx + ( self.count - 1 ) * ( point[ 0 ] - self.Mx ) * ( point[ 0 ] - self.Mx ) / self.count
+    self.Sy = self.Sy + ( self.count - 1 ) * ( point[ 1 ] - self.My ) * ( point[ 1 ] - self.My ) / self.count
+    self.Sz = self.Sz + ( self.count - 1 ) * ( point[ 2 ] - self.Mz ) * ( point[ 2 ] - self.Mz ) / self.count
+    
+    # Each dimension for mean
+    self.Mx = self.Mx + ( point[ 0 ] - self.Mx ) / self.count
+    self.My = self.My + ( point[ 1 ] - self.My ) / self.count
+    self.Mz = self.Mz + ( point[ 2 ] - self.Mz ) / self.count
     
     
   def GetMetric( self ):
-    meanX=0
-    meanY=0
-    meanZ=0
-    sumofcoordinates=0
     
-    for i in range (0,len(self.xList)):
-      meanX=meanX+(self.xList[i]/self.pointCounter)
-    for i in range (0,len(self.yList)):
-      meanY=meanY+(self.yList[i]/self.pointCounter)
-    for i in range (0,len(self.zList)):
-      meanZ=meanZ+(self.zList[i]/self.pointCounter)
-	
-    for i in range (0,len(self.xList)):
-      sumofcoordinates=sumofcoordinates+((self.xList[i]-meanX)**2)+((self.yList[i]-meanY)**2)+((self.zList[i]-meanZ)**2)
-    
-    return math.sqrt(sumofcoordinates/self.pointCounter)	
+    # Each of self.Sx, self.Sy, and self.Sz is the sum of squares difference from the mean
+    return math.sqrt( ( self.Sx + self.Sy + self.Sz ) / self.count )
