@@ -1,16 +1,20 @@
-PerkTutorCoreMetrics = []
+import importlib
 
-import ElapsedTime
-PerkTutorCoreMetrics.append( ElapsedTime.PerkEvaluatorMetric() )
+# The list of all the core metrics
+# Note: To add a "Core" metric, simply add its name to the list (note the dot at the beginning of the name)
+PerkTutorCoreMetricNames = [
+  ".ElapsedTime",
+  ".PathLength",
+  ".TissueDamage",
+  ".TissuePath",
+  ".TissueTime"
+]
 
-import PathLength
-PerkTutorCoreMetrics.append( PathLength.PerkEvaluatorMetric() )
+def GetFreshCoreMetrics():
+  PerkTutorCoreMetrics = []
 
-import TissueDamage
-PerkTutorCoreMetrics.append( TissueDamage.PerkEvaluatorMetric() )
-
-import TissuePath
-PerkTutorCoreMetrics.append( TissuePath.PerkEvaluatorMetric() )
-
-import TissueTime
-PerkTutorCoreMetrics.append( TissueTime.PerkEvaluatorMetric() )
+  for metricName in PerkTutorCoreMetricNames:
+    metricModule = importlib.import_module( metricName, __name__ )
+    PerkTutorCoreMetrics.append( metricModule.PerkEvaluatorMetric() )
+  
+  return PerkTutorCoreMetrics
