@@ -3,7 +3,8 @@
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.elapsedTime = 0
+    self.timePrev = None
   
   def GetMetricName( self ):
     return "Elapsed Time"
@@ -20,19 +21,12 @@ class PerkEvaluatorMetric:
   def AddAnatomyRole( self, role, node ):
     pass
     
-  def Initialize( self ):
-    self.elapsedTime = 0
-    self.timePrev = None
-    
   def AddTimestamp( self, time, matrix, point ):
   
     if ( self.timePrev != None ):
       self.elapsedTime = self.elapsedTime + ( time - self.timePrev )
       
     self.timePrev = time
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return self.elapsedTime

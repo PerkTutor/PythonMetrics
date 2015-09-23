@@ -3,7 +3,8 @@ import math
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.pathLength = 0
+    self.pointPrev = None
   
   def GetMetricName( self ):
     return "Path Length"
@@ -20,10 +21,6 @@ class PerkEvaluatorMetric:
   def AddAnatomyRole( self, role, node ):
     pass
     
-  def Initialize( self ):
-    self.pathLength = 0
-    self.pointPrev = None
-    
   def AddTimestamp( self, time, matrix, point ):
 
     if ( self.pointPrev != None ):
@@ -31,10 +28,6 @@ class PerkEvaluatorMetric:
       self.pathLength = self.pathLength + currPath
 
     self.pointPrev = point[:] # Require element copy 
-    
-    
-  def Finalize( self ):
-    pass
-    
+       
   def GetMetric( self ):
     return self.pathLength

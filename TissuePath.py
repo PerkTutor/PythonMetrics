@@ -4,7 +4,8 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.tissuePathLength = 0    
+    self.pointPrev = None
   
   def GetMetricName( self ):
     return "Path in Tissue"
@@ -28,11 +29,6 @@ class PerkEvaluatorMetric:
       
     return False
     
-  def Initialize( self ):      
-    self.tissuePathLength = 0
-    
-    self.pointPrev = None
-    
   def AddTimestamp( self, time, matrix, point ):
     
     if ( self.tissueNode != None and self.pointPrev != None ):    
@@ -41,9 +37,6 @@ class PerkEvaluatorMetric:
         self.tissuePathLength = self.tissuePathLength + currPath
         
     self.pointPrev = point[:] # Require element copy 
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return self.tissuePathLength

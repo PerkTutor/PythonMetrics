@@ -4,7 +4,8 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.tissueTime = 0    
+    self.timePrev = None
   
   def GetMetricName( self ):
     return "Time in Tissue"
@@ -26,13 +27,7 @@ class PerkEvaluatorMetric:
       
       return True
       
-    return False
-
-  def Initialize( self ):
-    self.tissueTime = 0
-    
-    self.timePrev = None
-    
+    return False  
     
   def AddTimestamp( self, time, matrix, point ):
   
@@ -41,9 +36,6 @@ class PerkEvaluatorMetric:
         self.tissueTime = self.tissueTime + ( time - self.timePrev )
         
     self.timePrev = time
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return self.tissueTime
