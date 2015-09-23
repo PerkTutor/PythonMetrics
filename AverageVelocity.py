@@ -3,7 +3,11 @@ import math
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.velocitySum = 0
+    self.timestampCount = 0
+    
+    self.timePrev = None
+    self.pointPrev = None
   
   def GetMetricName( self ):
     return "Average Velocity"
@@ -18,16 +22,7 @@ class PerkEvaluatorMetric:
     return []
     
   def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def Initialize( self ):
-    self.velocitySum = 0
-    self.timestampCount = 0
-    self.averageVelocity = 0
-    
-    self.timePrev = None
-    self.pointPrev = None
-    
+    pass   
     
   def AddTimestamp( self, time, matrix, point ):
   
@@ -42,8 +37,5 @@ class PerkEvaluatorMetric:
     self.timePrev = time
     self.pointPrev = point[:] # Require element copy 
     
-  def Finalize( self ):
-    self.averageVelocity = self.velocitySum / self.timestampCount
-    
   def GetMetric( self ):
-    return self.averageVelocity
+    return ( self.velocitySum / self.timestampCount )

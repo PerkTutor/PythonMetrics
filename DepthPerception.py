@@ -4,7 +4,8 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.depthPerception = 0 
+    self.pointPrev = None    
   
   def GetMetricName( self ):
     return "Depth Perception"
@@ -20,11 +21,6 @@ class PerkEvaluatorMetric:
     
   def AddAnatomyRole( self, role, node ):
     pass
-    
-  def Initialize( self ):
-    self.depthPerception = 0 
-    self.pointPrev = None    
-    
     
   def AddTimestamp( self, time, matrix, point ):
 
@@ -50,10 +46,6 @@ class PerkEvaluatorMetric:
     self.depthPerception += math.fabs( needleAxisMovement )
     
     self.pointPrev = point[:]
-    
-    
-  def Finalize( self ):
-    pass
-    
+        
   def GetMetric( self ):
     return self.depthPerception

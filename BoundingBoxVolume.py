@@ -3,7 +3,14 @@ import math
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.minX = None
+    self.minY = None
+    self.minZ = None
+    self.maxX = None
+    self.maxY = None
+    self.maxZ = None
+    
+    self.volume = None
   
   def GetMetricName( self ):
     return "Bounding Box Volume"
@@ -19,16 +26,7 @@ class PerkEvaluatorMetric:
     
   def AddAnatomyRole( self, role, node ):
     pass
-    
-  def Initialize( self ):
-    self.minX = None
-    self.minY = None
-    self.minZ = None
-    self.maxX = None
-    self.maxY = None
-    self.maxZ = None
-    
-    self.volume = None
+
     
   def AddTimestamp( self, time, matrix, point ):
 
@@ -53,9 +51,5 @@ class PerkEvaluatorMetric:
     if ( point[ 2 ] > self.maxZ ):
       self.maxZ = point[ 2 ]
     
-    
-  def Finalize( self ):
-    self.volume = ( self.maxX - self.minX ) * ( self.maxY - self.minY ) * ( self.maxZ - self.minZ )
-    
   def GetMetric( self ):
-    return self.volume
+    return ( self.maxX - self.minX ) * ( self.maxY - self.minY ) * ( self.maxZ - self.minZ )

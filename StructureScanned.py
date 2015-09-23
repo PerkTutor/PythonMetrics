@@ -10,7 +10,7 @@ class PerkEvaluatorMetric:
   IMAGE_Y_MAX = 625 #pixels
 
   def __init__( self ):
-    pass
+    self.structureScanned = 0  
   
   def GetMetricName( self ):
     return "Structure Scanned?"
@@ -34,10 +34,6 @@ class PerkEvaluatorMetric:
       return True
       
     return False
-    
-  def Initialize( self ):     
-    self.structureScanned = 0    
-    
     
   def AddTimestamp( self, time, matrix, point ):
 
@@ -78,9 +74,7 @@ class PerkEvaluatorMetric:
       if ( scanlineIntersection == 1 ):
         self.structureScanned = 1
         return
-    
-  def Finalize( self ):
-    pass
+
     
   def GetMetric( self ):
     return self.structureScanned

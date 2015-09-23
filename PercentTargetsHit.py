@@ -41,10 +41,7 @@ class PerkEvaluatorMetric:
       return True
       
     return False
-    
-  def Initialize( self ):   
-    self.percentHit = 0
-    
+
     
   def AddTimestamp( self, time, matrix, point ):
   
@@ -78,10 +75,7 @@ class PerkEvaluatorMetric:
       # Now check if the z-coordinate of the point in the image coordinate system is below some threshold value (i.e. 2mm)
       if ( abs( centerPoint_Image[2] ) < PerkEvaluatorMetric.IMAGE_PLANE_THRESHOLD / scaleFactor ):
         self.hitTargets[ i ] = 1
-
     
-  def Finalize( self ):
-    self.percentHit = 100 * float( sum( self.hitTargets ) ) / len( self.hitTargets )
     
   def GetMetric( self ):
-    return self.percentHit
+    return 100 * float( sum( self.hitTargets ) ) / len( self.hitTargets )

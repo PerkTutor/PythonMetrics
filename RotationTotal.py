@@ -4,7 +4,8 @@ import vtk
 class PerkEvaluatorMetric:
 
   def __init__( self ):
-    pass
+    self.rotationTotal = 0
+    self.matrixPrev = None
   
   def GetMetricName( self ):
     return "Rotation Total"
@@ -20,11 +21,6 @@ class PerkEvaluatorMetric:
     
   def AddAnatomyRole( self, role, node ):
     pass
-    
-  def Initialize( self ):
-    self.rotationTotal = 0
-    self.matrixPrev = None
-    
     
   def AddTimestamp( self, time, matrix, point ):
   
@@ -52,9 +48,6 @@ class PerkEvaluatorMetric:
     self.matrixPrev = vtk.vtkMatrix4x4()
     self.matrixPrev.DeepCopy( matrix )
 
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return self.rotationTotal

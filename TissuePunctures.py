@@ -6,7 +6,8 @@ class PerkEvaluatorMetric:
   PUNCTURE_THRESHOLD = 5 #mm
 
   def __init__( self ):
-    pass
+    self.tissuePunctures = 0
+    self.punctureState = False  
   
   def GetMetricName( self ):
     return "Tissue Punctures"
@@ -29,12 +30,7 @@ class PerkEvaluatorMetric:
       return True
       
     return False
-    
-  def Initialize( self ):
-    self.tissuePunctures = 0
-    self.punctureState = False  
-    
-    
+
   def AddTimestamp( self, time, matrix, point ):
       
     # Find the three key points on the needle
@@ -61,9 +57,6 @@ class PerkEvaluatorMetric:
     if ( self.punctureState ):
       if ( NeedleTipInside == False and NeedleTipForwardInside == False and NeedleTipBackwardInside == False ):
         self.punctureState = False
-    
-  def Finalize( self ):
-    pass
-    
+
   def GetMetric( self ):
     return self.tissuePunctures

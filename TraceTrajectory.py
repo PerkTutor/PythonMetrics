@@ -4,26 +4,7 @@ import slicer
 
 class PerkEvaluatorMetric:
 
-  def __init__( self ):
-    pass
-  
-  def GetMetricName( self ):
-    return "Display Trajectory"
-    
-  def GetMetricUnit( self ):
-    return "display"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return []
-    
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def Initialize( self ):
-    
+  def __init__( self ):    
     self.curvePoints = vtk.vtkPoints()
     self.curveLines = vtk.vtkCellArray()
     self.curvePolyData = vtk.vtkPolyData()
@@ -46,8 +27,22 @@ class PerkEvaluatorMetric:
     slicer.mrmlScene.AddNode( curveModel )
   
     curveModel.SetAndObserveDisplayNodeID( curveModelDisplay.GetID() )
+  
+  def GetMetricName( self ):
+    return "Display Trajectory"
     
+  def GetMetricUnit( self ):
+    return "display"
     
+  def GetAcceptedTransformRoles( self ):
+    return [ "Any" ]
+    
+  def GetRequiredAnatomyRoles( self ):
+    return []
+    
+  def AddAnatomyRole( self, role, node ):
+    pass
+       
   def AddTimestamp( self, time, matrix, point ):
   
     # Some initialization for the first point
@@ -63,9 +58,6 @@ class PerkEvaluatorMetric:
     self.curveLines.InsertCellPoint( self.counter + 1 )
     self.counter += 1
 
-    
-  def Finalize( self ):
-    pass
     
   def GetMetric( self ):
     return 0

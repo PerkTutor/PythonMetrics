@@ -12,7 +12,7 @@ class PerkEvaluatorMetric:
   IMAGE_Y_MAX = 625 #pixels
 
   def __init__( self ):
-    pass
+    self.structureScanned = 0
   
   def GetMetricName( self ):
     return "Structure Centroid Scanned?"
@@ -40,10 +40,7 @@ class PerkEvaluatorMetric:
       return True
       
     return False
-    
-  def Initialize( self ):      
-    self.structureScanned = 0
-    
+
   def AddTimestamp( self, time, matrix, point ):
     
     # Assume the matrix is ImageToRAS
@@ -69,9 +66,7 @@ class PerkEvaluatorMetric:
     # Now check if the z-coordinate of the point in the image coordinate system is below some threshold value (i.e. 2mm)
     if ( abs( centerPoint_Image[2] ) < PerkEvaluatorMetric.IMAGE_PLANE_THRESHOLD / scaleFactor ):
       self.structureScanned = 1
-    
-  def Finalize( self ):
-    pass
+
     
   def GetMetric( self ):
     return self.structureScanned
