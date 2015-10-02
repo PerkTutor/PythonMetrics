@@ -47,7 +47,7 @@ class PerkEvaluatorMetric:
     return [ "Ultrasound" ]
     
   def GetRequiredAnatomyRoles( self ):
-    return []
+    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

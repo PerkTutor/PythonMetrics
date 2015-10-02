@@ -31,10 +31,13 @@ class PerkEvaluatorMetric:
     return [ "Ultrasound" ]
     
   def GetRequiredAnatomyRoles( self ):
-    return [ "POIs" ]
+    return { "POIs": "vtkMRMLMarkupsFiducialNode" }
     
   def AddAnatomyRole( self, role, node ):
-    if ( role == "POIs" and node != None and node.GetClassName() == "vtkMRMLMarkupsFiducialNode" ):
+    if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
+      return False
+    
+    if ( role == "POIs" ):
       self.targets = node  
       self.hitTargets = [ 0 ] * self.targets.GetNumberOfFiducials()
       

@@ -24,10 +24,13 @@ class PerkEvaluatorMetric:
     return [ "Ultrasound" ]
     
   def GetRequiredAnatomyRoles( self ):
-    return [ "Target" ]
+    return { "Target": "vtkMRMLModelNode" }
     
   def AddAnatomyRole( self, role, node ):
-    if ( role == "Target" and node != None and node.GetClassName() == "vtkMRMLModelNode" ):
+    if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
+      return False
+    
+    if ( role == "Target" ):
       self.targetNode = node
       comFilter = vtk.vtkCenterOfMass()
       comFilter.SetInputData( self.targetNode.GetPolyData() )

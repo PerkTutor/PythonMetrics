@@ -23,7 +23,7 @@ class PerkEvaluatorMetric:
     return [ "Any" ]
     
   def GetRequiredAnatomyRoles( self ):
-    return []
+    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass
