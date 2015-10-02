@@ -3,6 +3,25 @@ import math
 # Use Welford's algorithm - this works in real-time and is robust
 class PerkEvaluatorMetric:
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "RMS"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "mm"
+    
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+  
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.Mx = None
     self.My = None
@@ -13,18 +32,6 @@ class PerkEvaluatorMetric:
     self.Sz = None
 
     self.count = 0
-  
-  def GetMetricName( self ):
-    return "RMS"
-    
-  def GetMetricUnit( self ):
-    return "mm"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

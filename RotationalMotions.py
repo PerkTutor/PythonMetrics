@@ -5,6 +5,25 @@ class PerkEvaluatorMetric:
 
   ANGLE_THRESHOLD = 5 #degrees/s
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Rotational Motions"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "count"
+    
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+    
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.numMotions = 0
     
@@ -13,18 +32,6 @@ class PerkEvaluatorMetric:
     
     self.timePrev = None
     self.matrixPrev = None
-  
-  def GetMetricName( self ):
-    return "Rotational Motions"
-    
-  def GetMetricUnit( self ):
-    return "count"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

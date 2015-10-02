@@ -9,7 +9,26 @@ class PerkEvaluatorMetric:
   NEIGHBOURHOOD = 0.15 #s
   MIN_PEAK_DIFFERENCE = 0 #mm/s
   MIN_PEAK_HEIGHT = 50 #mm/s
+  
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Translational Velocity Peaks"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "count"
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+  
+  @staticmethod  
+  def GetRequiredAnatomyRoles():
+    return {}
 
+  
+  # Instance methods
   def __init__( self ):
     self.velocityPeaks = 0
     
@@ -24,22 +43,9 @@ class PerkEvaluatorMetric:
     
     self.timePrev = None
     self.matrixPrev = None
-  
-  def GetMetricName( self ):
-    return "Translational Velocity Peaks"
-    
-  def GetMetricUnit( self ):
-    return "count"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass
-
     
   def AddTimestamp( self, time, matrix, point ):
   

@@ -12,26 +12,27 @@ class PerkEvaluatorMetric:
   IMAGE_Y_MIN = 153 #pixels
   IMAGE_Y_MAX = 625 #pixels
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Targets Hit"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "%"
+  
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Ultrasound" ]
+  
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return { "POIs": "vtkMRMLMarkupsFiducialNode" }
+    
+    
+  # Instance methods    
   def __init__( self ):
     pass
-  
-  def GetMetricName( self ):
-    return "Targets Hit"
-    
-  def GetMetricUnit( self ):
-    return "%"
-    
-  def RequiresTissueNode( self ):
-    return False
-    
-  def RequiresNeedle( self ):
-    return False
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Ultrasound" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return { "POIs": "vtkMRMLMarkupsFiducialNode" }
     
   def AddAnatomyRole( self, role, node ):
     if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):

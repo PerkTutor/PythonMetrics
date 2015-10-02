@@ -3,21 +3,28 @@ import vtk
 
 class PerkEvaluatorMetric:
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Rotation Total"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "deg"
+    
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+    
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.rotationTotal = 0
     self.matrixPrev = None
-  
-  def GetMetricName( self ):
-    return "Rotation Total"
-    
-  def GetMetricUnit( self ):
-    return "deg"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

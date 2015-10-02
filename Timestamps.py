@@ -2,20 +2,27 @@
 
 class PerkEvaluatorMetric:
 
-  def __init__( self ):
-    self.numTimestamps = 0
-  
-  def GetMetricName( self ):
+  # Static methods
+  @staticmethod
+  def GetMetricName():
     return "Timestamps"
-    
-  def GetMetricUnit( self ):
+  
+  @staticmethod  
+  def GetMetricUnit():
     return "count"
-    
-  def GetAcceptedTransformRoles( self ):
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
     return [ "Any" ]
     
-  def GetRequiredAnatomyRoles( self ):
+  @staticmethod
+  def GetRequiredAnatomyRoles():
     return {}
+  
+  
+  # Instance methods  
+  def __init__( self ):
+    self.numTimestamps = 0
     
   def AddAnatomyRole( self, role, node ):
     pass

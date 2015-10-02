@@ -3,21 +3,28 @@ import vtk
 
 class PerkEvaluatorMetric:
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Depth Perception"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "mm"
+    
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Needle" ]
+  
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.depthPerception = 0 
     self.pointPrev = None    
-  
-  def GetMetricName( self ):
-    return "Depth Perception"
-    
-  def GetMetricUnit( self ):
-    return "mm"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Needle" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

@@ -5,27 +5,34 @@ class PerkEvaluatorMetric:
 
   PUNCTURE_THRESHOLD = 5 #mm
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Tissue Punctures"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "count"
+    
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Needle" ]
+    
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return { "Tissue": "vtkMRMLModelNode" }
+    
+    
+  # Instance methods
   def __init__( self ):
     self.tissuePunctures = 0
     self.punctureState = False  
-  
-  def GetMetricName( self ):
-    return "Tissue Punctures"
-    
-  def GetMetricUnit( self ):
-    return "count"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Needle" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return { "Tissue": "vtkMRMLModelNode" }
     
   def AddAnatomyRole( self, role, node ):
     if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
       return False
     
-    if ( role == "Tissue" ):
+    if ( role == "Tissue" and node.GetPolyData() != None ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
       self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )      

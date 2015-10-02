@@ -10,6 +10,25 @@ class PerkEvaluatorMetric:
   MIN_PEAK_DIFFERENCE = 0 #deg/s
   MIN_PEAK_HEIGHT = 20 #deg/s
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Rotational Velocity Peaks"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "count"
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+    
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.velocityPeaks = 0
     
@@ -24,18 +43,6 @@ class PerkEvaluatorMetric:
     
     self.timePrev = None
     self.matrixPrev = None
-  
-  def GetMetricName( self ):
-    return "Rotational Velocity Peaks"
-    
-  def GetMetricUnit( self ):
-    return "count"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

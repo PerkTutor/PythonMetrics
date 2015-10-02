@@ -2,6 +2,25 @@ import math
 
 class PerkEvaluatorMetric:
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Bounding Box Extent"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "mm"
+    
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+    
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.minX = None
     self.minY = None
@@ -9,20 +28,6 @@ class PerkEvaluatorMetric:
     self.maxX = None
     self.maxY = None
     self.maxZ = None
-    
-    self.volume = None
-  
-  def GetMetricName( self ):
-    return "Bounding Box Extent"
-    
-  def GetMetricUnit( self ):
-    return "mm"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

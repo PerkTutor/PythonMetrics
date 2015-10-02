@@ -7,6 +7,26 @@ class PerkEvaluatorMetric:
   VELOCITY_THRESHOLD = 50 #mm/s
   TIME_THRESHOLD = 0.2 #s
 
+
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Translational Actions"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "count"
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+  
+  @staticmethod  
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.numActions = 0
     
@@ -15,18 +35,6 @@ class PerkEvaluatorMetric:
     
     self.timePrev = None
     self.matrixPrev = None
-  
-  def GetMetricName( self ):
-    return "Translational Actions"
-    
-  def GetMetricUnit( self ):
-    return "count"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

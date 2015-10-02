@@ -2,24 +2,31 @@ import math
 
 class PerkEvaluatorMetric:
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Average Velocity"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "mm/s"
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+    
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.velocitySum = 0
     self.timestampCount = 0
     
     self.timePrev = None
     self.pointPrev = None
-  
-  def GetMetricName( self ):
-    return "Average Velocity"
-    
-  def GetMetricUnit( self ):
-    return "mm/s"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass   

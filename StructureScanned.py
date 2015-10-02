@@ -9,26 +9,33 @@ class PerkEvaluatorMetric:
   IMAGE_Y_MIN = 153 #pixels
   IMAGE_Y_MAX = 625 #pixels
 
-  def __init__( self ):
-    self.structureScanned = 0  
-  
-  def GetMetricName( self ):
+  # Static methods
+  @staticmethod
+  def GetMetricName():
     return "Structure Scanned?"
     
-  def GetMetricUnit( self ):
+  @staticmethod
+  def GetMetricUnit():
     return "True/False"
-    
-  def GetAcceptedTransformRoles( self ):
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
     return [ "Ultrasound" ]
-    
-  def GetRequiredAnatomyRoles( self ):
+  
+  @staticmethod  
+  def GetRequiredAnatomyRoles():
     return { "Target": "vtkMRMLModelNode" }
+    
+    
+  # Instance methods  
+  def __init__( self ):
+    self.structureScanned = 0  
     
   def AddAnatomyRole( self, role, node ):
     if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
       return False
     
-    if ( role == "Target" ):
+    if ( role == "Tissue" and node.GetPolyData() != None ):
       self.targetNode = node
       self.bspTree = vtk.vtkModifiedBSPTree()
       self.bspTree.SetDataSet( self.targetNode.GetPolyData() )

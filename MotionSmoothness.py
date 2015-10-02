@@ -3,6 +3,25 @@ import vtk
 
 class PerkEvaluatorMetric:
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Motion Smoothness"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "mm/s^3"
+    
+  @staticmethod
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+    
+  @staticmethod
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+    
+  # Instance methods  
   def __init__( self ):
     self.squaredJerk = 0
     
@@ -13,18 +32,6 @@ class PerkEvaluatorMetric:
     self.timePrev1 = None
     self.timePrev2 = None
     self.timePrev3 = None
-  
-  def GetMetricName( self ):
-    return "Motion Smoothness"
-    
-  def GetMetricUnit( self ):
-    return "mm/s^3"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass
