@@ -1,22 +1,29 @@
 import math
 
 class PerkEvaluatorMetric:
+  
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Path Length"
 
+  @staticmethod
+  def GetMetricUnit():
+    return "mm"
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
+    return [ "Any" ]
+  
+  @staticmethod  
+  def GetRequiredAnatomyRoles():
+    return {}
+    
+  
+  # Instance methods
   def __init__( self ):
     self.pathLength = 0
     self.pointPrev = None
-  
-  def GetMetricName( self ):
-    return "Path Length"
-    
-  def GetMetricUnit( self ):
-    return "mm"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Any" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return {}
     
   def AddAnatomyRole( self, role, node ):
     pass

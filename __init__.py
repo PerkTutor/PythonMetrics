@@ -10,11 +10,15 @@ PerkTutorCoreMetricNames = [
   ".TissueTime"
 ]
 
-def GetFreshCoreMetrics():
-  PerkTutorCoreMetrics = []
+def GetFreshCoreMetricModules():
+  metricModulesList = []
 
   for metricName in PerkTutorCoreMetricNames:
-    metricModule = importlib.import_module( metricName, __name__ )
-    PerkTutorCoreMetrics.append( metricModule.PerkEvaluatorMetric() )
+    try:
+      # If it can't load properly, then just ignore
+      currentMetricModule = importlib.import_module( metricName, __name__ )
+      metricModulesList.append( currentMetricModule.PerkEvaluatorMetric ) # This implicitly tests whether the class is defined
+    except:
+      print "Could not load metric: ", metricName, "."
   
-  return PerkTutorCoreMetrics
+  return metricModulesList

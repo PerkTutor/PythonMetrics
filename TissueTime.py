@@ -3,27 +3,34 @@ import vtk
 
 class PerkEvaluatorMetric:
 
+  # Static methods
+  @staticmethod
+  def GetMetricName():
+    return "Time in Tissue"
+  
+  @staticmethod  
+  def GetMetricUnit():
+    return "s"
+  
+  @staticmethod  
+  def GetAcceptedTransformRoles():
+    return [ "Needle" ]
+  
+  @staticmethod  
+  def GetRequiredAnatomyRoles():
+    return { "Tissue": "vtkMRMLModelNode" }
+  
+  
+  # Instance methods
   def __init__( self ):
     self.tissueTime = 0    
     self.timePrev = None
-  
-  def GetMetricName( self ):
-    return "Time in Tissue"
-    
-  def GetMetricUnit( self ):
-    return "s"
-    
-  def GetAcceptedTransformRoles( self ):
-    return [ "Needle" ]
-    
-  def GetRequiredAnatomyRoles( self ):
-    return { "Tissue": "vtkMRMLModelNode" }
     
   def AddAnatomyRole( self, role, node ):
     if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
       return False
       
-    if ( role == "Tissue" ):
+    if ( role == "Tissue" and node.GetPolyData() != None ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
       self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )      
