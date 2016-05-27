@@ -35,7 +35,7 @@ class PerkEvaluatorMetric:
     if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
       return False
     
-    if ( role == "Tissue" and node.GetPolyData() != None ):
+    if ( role == "Target" and node.GetPolyData() != None ):
       self.targetNode = node
       self.bspTree = vtk.vtkModifiedBSPTree()
       self.bspTree.SetDataSet( self.targetNode.GetPolyData() )

@@ -37,7 +37,7 @@ class PerkEvaluatorMetric:
     if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
       return False
     
-    if ( role == "Tissue" and node.GetPolyData() != None ):
+    if ( role == "Target" and node.GetPolyData() != None ):
       self.targetNode = node
       comFilter = vtk.vtkCenterOfMass()
       comFilter.SetInputData( self.targetNode.GetPolyData() )
