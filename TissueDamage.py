@@ -3,6 +3,9 @@ import vtk
 
 class PerkEvaluatorMetric:
 
+  # Needle length
+  NEEDLE_LENGTH = 300 #mm
+
   # Static methods
   @staticmethod
   def GetMetricName():
@@ -60,12 +63,13 @@ class PerkEvaluatorMetric:
       self.pointPrev = point[:] # Require element copy
       return
       
-    # Find the base points (assume needle in y direction)
-    NeedleBase = [ 300, 0, 0, 1 ]
+    # Find the base points (use needle orientation)
+    needleBase = [ x * - PerkEvaluatorMetric.NEEDLE_LENGTH for x in self.NeedleOrientation ] # Get the position of the needle's base in the oriented needle coordinate system
+    needleBase.append( 1 ) # Add the element for homogeneous matrix transforms
     basePrev = [ 0, 0, 0, 1 ]
     baseCurr = [ 0, 0, 0, 1 ]
-    self.matrixPrev.MultiplyPoint( NeedleBase, basePrev )
-    matrix.MultiplyPoint( NeedleBase, baseCurr )
+    self.matrixPrev.MultiplyPoint( needleBase, basePrev )
+    matrix.MultiplyPoint( needleBase, baseCurr )
     
     # Make everything three elements long
     endPrev = [ 0, 0, 0 ]
