@@ -39,16 +39,14 @@ class PerkEvaluatorMetric:
     vtk.vtkMath().Subtract( point[0:3], self.pointPrev[0:3], prevToCurrentVector )
     prevToCurrentVector = [ prevToCurrentVector[ 0 ], prevToCurrentVector[ 1 ], prevToCurrentVector[ 2 ] ]
     
-    # Assume the needle is in the y-direction
-    needleTip = [ point[ 0 ], point[ 1 ], point[ 2 ] ]
-    needleBase = [ 0, 0, 0, 1 ]
-    matrix.MultiplyPoint( [ 0, 1, 0, 1 ], needleBase )
-    needleBase = [ needleBase[ 0 ], needleBase[ 1 ], needleBase[ 2 ] ]
-    baseToTipVector = [ 0, 0, 0 ]
-    vtk.vtkMath().Subtract( needleTip[0:3], needleBase[0:3], baseToTipVector )
+    # Compute the direction vector of the needle in RAS, using the needle orientation protocol
+    needleOrientation = self.NeedleOrientation[:]
+    needleOrientation.append( 0 )
+    needleVector_RAS = [ 0, 0, 0, 0 ]
+    matrix.MultiplyPoint( needleOrientation, needleVector_RAS )
     
     # Find the movement in the needle direction
-    needleAxisMovement = vtk.vtkMath().Dot( prevToCurrentVector, baseToTipVector )
+    needleAxisMovement = vtk.vtkMath().Dot( prevToCurrentVector, needleVector_RAS[ 0:3 ] )
     
     self.depthPerception += math.fabs( needleAxisMovement )
     
