@@ -38,9 +38,11 @@ class PerkEvaluatorMetric:
     if ( role == "Tissue" and node.GetPolyData() != None ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
+      self.enclosedFilter.SetTolerance( 1e-12 )
       self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )
       
       self.bspTree = vtk.vtkModifiedBSPTree()
+      self.bspTree.SetTolerance( 1e-12 )
       self.bspTree.SetDataSet( self.tissueNode.GetPolyData() )
       self.bspTree.BuildLocator()
       
@@ -80,7 +82,7 @@ class PerkEvaluatorMetric:
     baseCurr = [ baseCurr[0], baseCurr[1], baseCurr[2] ]
     
     # Find the intersection between the needle and the surface tissue
-    INTERSECTION_TOLERANCE = 0.001
+    INTERSECTION_TOLERANCE = 1e-12
     P_COORDS = [ 0, 0, 0 ]
     T = vtk.mutable(0)
     SUB_ID = vtk.mutable(0) 

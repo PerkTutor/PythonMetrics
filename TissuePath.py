@@ -33,6 +33,7 @@ class PerkEvaluatorMetric:
     if ( role == "Tissue" and node.GetPolyData() != None ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
+      self.enclosedFilter.SetTolerance( 1e-12 )
       self.enclosedFilter.Initialize( self.tissueNode.GetPolyData() )      
       return True
       
