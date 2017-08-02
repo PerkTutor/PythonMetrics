@@ -1,6 +1,6 @@
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-
-class PerkEvaluatorMetric:
+class ElapsedTime( PerkEvaluatorMetric ):
   
   # Static methods
   @staticmethod
@@ -12,24 +12,22 @@ class PerkEvaluatorMetric:
     return "s"
     
   @staticmethod
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
+  def IsPervasive():
+    return True
     
   @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
+  def IsShared():
+    return True
     
   
   # Instance methods
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+    
     self.elapsedTime = 0
     self.timePrev = None
     
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def AddTimestamp( self, time, matrix, point ):
-  
+  def AddTimestamp( self, time, matrix, point, role ):  
     if ( self.timePrev != None ):
       self.elapsedTime = self.elapsedTime + ( time - self.timePrev )
       

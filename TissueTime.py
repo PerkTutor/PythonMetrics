@@ -1,7 +1,8 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class TissueTime( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -11,25 +12,28 @@ class PerkEvaluatorMetric:
   @staticmethod  
   def GetMetricUnit():
     return "s"
+    
+  @staticmethod
+  def IsShared():
+    return True
   
   @staticmethod  
-  def GetAcceptedTransformRoles():
+  def GetTransformRoles():
     return [ "Needle" ]
   
   @staticmethod  
-  def GetRequiredAnatomyRoles():
+  def GetAnatomyRoles():
     return { "Tissue": "vtkMRMLModelNode" }
   
   
   # Instance methods
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+    
     self.tissueTime = 0    
     self.timePrev = None
     
-  def AddAnatomyRole( self, role, node ):
-    if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
-      return False
-      
+  def SetAnatomy( self, role, node ):
     if ( role == "Tissue" and node.GetPolyData() != None ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
@@ -39,8 +43,7 @@ class PerkEvaluatorMetric:
       
     return False  
     
-  def AddTimestamp( self, time, matrix, point ):
-  
+  def AddTimestamp( self, time, matrix, point, role ):  
     if ( self.tissueNode != None and self.timePrev != None ):
       if ( self.enclosedFilter.IsInsideSurface( point[0], point[1], point[2] ) ):
         self.tissueTime = self.tissueTime + ( time - self.timePrev )
