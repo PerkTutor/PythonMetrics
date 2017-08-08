@@ -1,6 +1,6 @@
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-
-class PerkEvaluatorMetric:
+class Timestamps( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -11,23 +11,14 @@ class PerkEvaluatorMetric:
   def GetMetricUnit():
     return "count"
   
-  @staticmethod  
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-    
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
-  
   
   # Instance methods  
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+  
     self.numTimestamps = 0
     
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def AddTimestamp( self, time, matrix, point ):
+  def AddTimestamp( self, time, matrix, point, role ):
     self.numTimestamps += 1
     
   def GetMetric( self ):

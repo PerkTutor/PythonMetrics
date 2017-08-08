@@ -1,7 +1,8 @@
 import math
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
 # Use Welford's algorithm - this works in real-time and is robust
-class PerkEvaluatorMetric:
+class RMSMetric( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -12,17 +13,11 @@ class PerkEvaluatorMetric:
   def GetMetricUnit():
     return "mm"
     
-  @staticmethod
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-  
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
-    
     
   # Instance methods  
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+  
     self.Mx = None
     self.My = None
     self.Mz = None
@@ -31,14 +26,9 @@ class PerkEvaluatorMetric:
     self.Sy = None
     self.Sz = None
 
-    self.count = 0
+    self.count = 0   
     
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-    
-  def AddTimestamp( self, time, matrix, point ):
-    
+  def AddTimestamp( self, time, matrix, point, role ):    
     if ( self.count == 0 ):
       self.count += 1
       self.Mx = point[ 0 ]
@@ -62,7 +52,6 @@ class PerkEvaluatorMetric:
     self.Mz = self.Mz + ( point[ 2 ] - self.Mz ) / self.count
     
     
-  def GetMetric( self ):
-    
+  def GetMetric( self ):    
     # Each of self.Sx, self.Sy, and self.Sz is the sum of squares difference from the mean
     return math.sqrt( ( self.Sx + self.Sy + self.Sz ) / self.count )

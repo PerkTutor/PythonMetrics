@@ -1,6 +1,7 @@
 import math
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class AverageVelocity( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -10,28 +11,19 @@ class PerkEvaluatorMetric:
   @staticmethod  
   def GetMetricUnit():
     return "mm/s"
-  
-  @staticmethod  
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-    
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
     
     
   # Instance methods  
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+    
     self.velocitySum = 0
     self.timestampCount = 0
     
     self.timePrev = None
     self.pointPrev = None
     
-  def AddAnatomyRole( self, role, node ):
-    pass   
-    
-  def AddTimestamp( self, time, matrix, point ):
+  def AddTimestamp( self, time, matrix, point, role ):
   
     if ( time == self.timePrev ):
       return

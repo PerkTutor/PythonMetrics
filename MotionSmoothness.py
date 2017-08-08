@@ -1,7 +1,8 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class MotionSmoothness( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -12,17 +13,11 @@ class PerkEvaluatorMetric:
   def GetMetricUnit():
     return "mm/s^3"
     
-  @staticmethod
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-    
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
-    
     
   # Instance methods  
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+    
     self.squaredJerk = 0
     
     self.pointPrev1 = None
@@ -32,12 +27,8 @@ class PerkEvaluatorMetric:
     self.timePrev1 = None
     self.timePrev2 = None
     self.timePrev3 = None
-    
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def AddTimestamp( self, time, matrix, point ):
-  
+        
+  def AddTimestamp( self, time, matrix, point, role ):  
     if ( time == self.timePrev1 or time == self.timePrev2 or time == self.timePrev3 ):
       return
 
@@ -54,7 +45,7 @@ class PerkEvaluatorMetric:
         
       return
     
-    # Note that we are using forward difference formulas here
+    # Note that we are using backward difference formulas here
     # We might use central difference formulas for better accuracy, but it couldn't be extensible to real-time    
     timeDiff01 = time - self.timePrev1
     timeDiff12 = self.timePrev1 - self.timePrev2
@@ -87,9 +78,9 @@ class PerkEvaluatorMetric:
     jerkMagnitude = math.pow( jerk[ 0 ], 2 ) + math.pow( jerk[ 1 ], 2 ) + math.pow( jerk[ 2 ], 2 )
     self.squaredJerk += jerkMagnitude * timeDiff01
 
-    self.pointPrev3 = self.pointPrev2[:]
+    self.pointPrev3 = self.pointPrev2[:] # Require element copy 
     self.timePrev3 = self.timePrev2
-    self.pointPrev2 = self.pointPrev1[:]
+    self.pointPrev2 = self.pointPrev1[:] # Require element copy 
     self.timePrev2 = self.timePrev1
     self.pointPrev1 = point[:] # Require element copy 
     self.timePrev1 = time

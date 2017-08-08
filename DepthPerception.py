@@ -1,7 +1,8 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class DepthPerception( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -13,24 +14,18 @@ class PerkEvaluatorMetric:
     return "mm"
     
   @staticmethod
-  def GetAcceptedTransformRoles():
+  def GetTransformRoles():
     return [ "Needle" ]
-  
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
     
     
   # Instance methods  
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+    
     self.depthPerception = 0 
     self.pointPrev = None    
     
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def AddTimestamp( self, time, matrix, point ):
-
+  def AddTimestamp( self, time, matrix, point, role ):
     if ( self.pointPrev == None ):
       self.pointPrev = point[:]
       

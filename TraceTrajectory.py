@@ -1,29 +1,27 @@
 import math
 import vtk
-import slicer
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class TraceTrajectory( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
   def GetMetricName():
-    return "Display Trajectory"
+    return "Trace Trajectory"
   
   @staticmethod  
   def GetMetricUnit():
-    return "display"
-  
-  @staticmethod  
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
+    return ""
   
   @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
+  def GetAnatomyRoles():
+    return { "OutputModel": "vtkMRMLModelNode" }
     
     
   # Instance methods
-  def __init__( self ):    
+  def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+    
     self.curvePoints = vtk.vtkPoints()
     self.curveLines = vtk.vtkCellArray()
     self.curvePolyData = vtk.vtkPolyData()
@@ -32,26 +30,17 @@ class PerkEvaluatorMetric:
     self.curvePolyData.SetPoints( self.curvePoints )
     self.curvePolyData.SetLines( self.curveLines )
     
-    # Turn the polydata into a model    
-    curveModel = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelNode" )
-    curveModel.SetAndObservePolyData( self.curvePolyData )
-    curveModel.SetName( "TrajectoryTrace" )
-    curveModel.SetScene( slicer.mrmlScene )
-  
-    curveModelDisplay = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelDisplayNode" )
-    curveModelDisplay.SetScene( slicer.mrmlScene )
-    curveModelDisplay.SetInputPolyDataConnection( curveModel.GetPolyDataConnection() )
-  
-    slicer.mrmlScene.AddNode( curveModelDisplay )
-    slicer.mrmlScene.AddNode( curveModel )
-  
-    curveModel.SetAndObserveDisplayNodeID( curveModelDisplay.GetID() )
-    
-  def AddAnatomyRole( self, role, node ):
-    pass
+  def SetAnatomy( self, role, node ):   
+    if ( role == "OutputModel" ):
+      node.SetAndObservePolyData( self.curvePolyData )
+      if ( node.GetModelDisplayNode() is None ):
+        node.CreateDefaultDisplayNodes()
+      modelDisplayNode = node.GetModelDisplayNode()
+      return True
+      
+    return False
        
-  def AddTimestamp( self, time, matrix, point ):
-  
+  def AddTimestamp( self, time, matrix, point, role ):  
     # Some initialization for the first point
     if ( self.curveLines.GetNumberOfCells() == 0 ):
       self.curvePoints.InsertNextPoint( point[ 0 ], point[ 1 ], point[ 2 ] )
@@ -64,7 +53,3 @@ class PerkEvaluatorMetric:
     self.curveLines.InsertCellPoint( self.counter )
     self.curveLines.InsertCellPoint( self.counter + 1 )
     self.counter += 1
-
-    
-  def GetMetric( self ):
-    return 0

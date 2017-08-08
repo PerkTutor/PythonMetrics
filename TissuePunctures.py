@@ -1,7 +1,8 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class TissuePunctures( PerkEvaluatorMetric ):
 
   PUNCTURE_THRESHOLD = 5 #mm
 
@@ -15,23 +16,22 @@ class PerkEvaluatorMetric:
     return "count"
     
   @staticmethod
-  def GetAcceptedTransformRoles():
+  def GetTransformRoles():
     return [ "Needle" ]
     
   @staticmethod
-  def GetRequiredAnatomyRoles():
+  def GetAnatomyRoles():
     return { "Tissue": "vtkMRMLModelNode" }
     
     
   # Instance methods
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+  
     self.tissuePunctures = 0
     self.punctureState = False  
     
-  def AddAnatomyRole( self, role, node ):
-    if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
-      return False
-    
+  def SetAnatomy( self, role, node ):
     if ( role == "Tissue" and node.GetPolyData() != None ):
       self.tissueNode = node
       self.enclosedFilter = vtk.vtkSelectEnclosedPoints()
@@ -40,8 +40,7 @@ class PerkEvaluatorMetric:
       
     return False
 
-  def AddTimestamp( self, time, matrix, point ):
-      
+  def AddTimestamp( self, time, matrix, point, role ):      
     # Find the three key points on the needle
     NeedleTip_Shaft = [ 0, 0, 0, 1 ]
     NeedleTip_RAS = [ 0, 0, 0, 1 ]
@@ -56,17 +55,17 @@ class PerkEvaluatorMetric:
     matrix.MultiplyPoint( NeedleTipForward_Shaft, NeedleTipForward_RAS )
     matrix.MultiplyPoint( NeedleTipBackward_Shaft, NeedleTipBackward_RAS )
     
-    NeedleTipInside = self.enclosedFilter.IsInsideSurface( NeedleTip_RAS[0], NeedleTip_RAS[1], NeedleTip_RAS[2] )
-    NeedleTipForwardInside = self.enclosedFilter.IsInsideSurface( NeedleTipForward_RAS[0], NeedleTipForward_RAS[1], NeedleTipForward_RAS[2] )
-    NeedleTipBackwardInside = self.enclosedFilter.IsInsideSurface( NeedleTipBackward_RAS[0], NeedleTipBackward_RAS[1], NeedleTipBackward_RAS[2] )
+    needleTipInside = self.enclosedFilter.IsInsideSurface( NeedleTip_RAS[0], NeedleTip_RAS[1], NeedleTip_RAS[2] )
+    needleTipForwardInside = self.enclosedFilter.IsInsideSurface( NeedleTipForward_RAS[0], NeedleTipForward_RAS[1], NeedleTipForward_RAS[2] )
+    needleTipBackwardInside = self.enclosedFilter.IsInsideSurface( NeedleTipBackward_RAS[0], NeedleTipBackward_RAS[1], NeedleTipBackward_RAS[2] )
     
     if ( not self.punctureState ):
-      if ( NeedleTipInside and NeedleTipForwardInside and NeedleTipBackwardInside ):
+      if ( needleTipInside and needleTipForwardInside and needleTipBackwardInside ):
         self.tissuePunctures += 1
         self.punctureState = True
         
     if ( self.punctureState ):
-      if ( not NeedleTipInside and not NeedleTipForwardInside and not NeedleTipBackwardInside ):
+      if ( not needleTipInside and not needleTipForwardInside and not needleTipBackwardInside ):
         self.punctureState = False
 
   def GetMetric( self ):

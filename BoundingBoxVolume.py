@@ -1,6 +1,6 @@
-import math
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class BoundingBoxVolume( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -11,17 +11,11 @@ class PerkEvaluatorMetric:
   def GetMetricUnit():
     return "mm^3"
     
-  @staticmethod
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-    
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
-    
     
   # Instance methods
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+     
     self.minX = None
     self.minY = None
     self.minZ = None
@@ -29,15 +23,9 @@ class PerkEvaluatorMetric:
     self.maxY = None
     self.maxZ = None
     
-    self.volume = None
-    
-  def AddAnatomyRole( self, role, node ):
-    pass
-
-    
-  def AddTimestamp( self, time, matrix, point ):
-
-    if ( self.minX == None or self.minY == None or self.minZ == None or self.maxX == None or self.maxY == None or self.maxZ == None ):
+  def AddTimestamp( self, time, matrix, point, role ):
+    if ( self.minX == None or self.minY == None or self.minZ == None
+      or self.maxX == None or self.maxY == None or self.maxZ == None ):
       self.minX = point[ 0 ]
       self.minY = point[ 1 ]
       self.minZ = point[ 2 ]

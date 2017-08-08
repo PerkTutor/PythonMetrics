@@ -1,12 +1,12 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class TranslationalActions( PerkEvaluatorMetric ):
 
   # Note: An action is defined as a time period where the absolute velocity of motion is greater than some threshold
   VELOCITY_THRESHOLD = 50 #mm/s
   TIME_THRESHOLD = 0.2 #s
-
 
   # Static methods
   @staticmethod
@@ -16,31 +16,20 @@ class PerkEvaluatorMetric:
   @staticmethod  
   def GetMetricUnit():
     return "count"
-  
-  @staticmethod  
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-  
-  @staticmethod  
-  def GetRequiredAnatomyRoles():
-    return {}
     
     
   # Instance methods  
   def __init__( self ):
-    self.numActions = 0
+    PerkEvaluatorMetric.__init__( self )
     
+    self.numActions = 0
     self.actionState = 0
     self.completeActionTime = 0
     
     self.timePrev = None
     self.matrixPrev = None
     
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def AddTimestamp( self, time, matrix, point ):
-  
+  def AddTimestamp( self, time, matrix, point, role ):  
     if ( time == self.timePrev ):
       return
     
@@ -66,12 +55,12 @@ class PerkEvaluatorMetric:
     vtk.vtkMath().MultiplyScalar( currVelocity, 1 / ( time - self.timePrev ) )
     currAbsVelocity = math.sqrt( currVelocity[ 0 ] * currVelocity[ 0 ] + currVelocity[ 1 ] * currVelocity[ 1 ] + currVelocity[ 2 ] * currVelocity[ 2 ] )
     
-    currentTestState = ( currAbsVelocity > PerkEvaluatorMetric.VELOCITY_THRESHOLD )
+    currentTestState = ( currAbsVelocity > TranslationalActions.VELOCITY_THRESHOLD )
     
     if ( currentTestState == self.actionState ):
       self.completeActionTime = time
     else:
-      if ( ( time - self.completeActionTime ) > PerkEvaluatorMetric.TIME_THRESHOLD ):
+      if ( ( time - self.completeActionTime ) > TranslationalActions.TIME_THRESHOLD ):
         self.actionState = currentTestState
         self.completeActionTime = time
         if ( currentTestState == 1 ):

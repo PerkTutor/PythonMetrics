@@ -1,7 +1,8 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class StructureScanned( PerkEvaluatorMetric ):
 
   # Image extent
   IMAGE_X_MIN = 173 #pixels
@@ -19,22 +20,21 @@ class PerkEvaluatorMetric:
     return "True/False"
   
   @staticmethod  
-  def GetAcceptedTransformRoles():
+  def GetTransformRoles():
     return [ "Ultrasound" ]
   
   @staticmethod  
-  def GetRequiredAnatomyRoles():
+  def GetAnatomyRoles():
     return { "Target": "vtkMRMLModelNode" }
     
     
   # Instance methods  
   def __init__( self ):
-    self.structureScanned = 0  
+    PerkEvaluatorMetric.__init__( self )
+  
+    self.structureScanned = False
     
-  def AddAnatomyRole( self, role, node ):
-    if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
-      return False
-    
+  def SetAnatomy( self, role, node ):
     if ( role == "Target" and node.GetPolyData() != None ):
       self.targetNode = node
       self.bspTree = vtk.vtkModifiedBSPTree()
@@ -44,23 +44,22 @@ class PerkEvaluatorMetric:
       
     return False
     
-  def AddTimestamp( self, time, matrix, point ):
-
+  def AddTimestamp( self, time, matrix, point, role ):
     if ( self.targetNode == None or self.bspTree == None ):
       return
       
     # To speed things up, if the structure has already been scanned, then skip
-    if ( self.structureScanned == 1 ):
+    if ( self.structureScanned ):
       return
 
     # Assume the matrix is ImageToRAS
     
     # For each scan line
     # Assume the x-axis is equivalent to the marked-unmarked axis
-    for i in range( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_X_MAX ):
+    for i in range( StructureScanned.IMAGE_X_MIN, StructureScanned.IMAGE_X_MAX ):
       # Find end points of the current scan line in the Image coordinate system
-      startPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_MIN, 0, 1 ]
-      endPoint_Image = [ i, PerkEvaluatorMetric.IMAGE_Y_MAX, 0, 1 ]
+      startPoint_Image = [ i, StructureScanned.IMAGE_Y_MIN, 0, 1 ]
+      endPoint_Image = [ i, StructureScanned.IMAGE_Y_MAX, 0, 1 ]
       
       # Transform the end points into the RAS coordinate system
       startPoint_RAS = [ 0, 0, 0, 1 ]
@@ -75,13 +74,13 @@ class PerkEvaluatorMetric:
       INTERSECTION_POINT = [ 0, 0, 0 ]
       INTERSECTION_TOLERANCE = 0.001
       P_COORDS = [ 0, 0, 0 ]
-      T = vtk.mutable(0)
-      SUB_ID = vtk.mutable(0)
+      T = vtk.mutable( 0 )
+      SUB_ID = vtk.mutable( 0 )
       
       scanlineIntersection = self.bspTree.IntersectWithLine( startPoint_RAS, endPoint_RAS, INTERSECTION_TOLERANCE, T, INTERSECTION_POINT, P_COORDS, SUB_ID )
       
       if ( scanlineIntersection == 1 ):
-        self.structureScanned = 1
+        self.structureScanned = True
         return
 
     

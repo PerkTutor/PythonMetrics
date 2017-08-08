@@ -1,8 +1,8 @@
 import math
 import vtk
-import slicer
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class ShowUltrasoundSweep( PerkEvaluatorMetric ):
 
   # Get the image X and Y extents
   IMAGE_X_MIN = 173 #pixels
@@ -17,51 +17,43 @@ class PerkEvaluatorMetric:
   
   @staticmethod  
   def GetMetricUnit():
-    return "display"
+    return ""
   
   @staticmethod
-  def GetAcceptedTransformRoles():
+  def GetTransformRoles():
     return [ "Ultrasound" ]
     
   @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
+  def GetAnatomyRoles():
+    return { "OutputModel": "vtkMRMLModelNode" }
     
     
   # Instance methods  
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+    
+    self.outputPolyData = vtk.vtkAppendPolyData()
+    
     planeSource = vtk.vtkPlaneSource()
     planeSource.SetOrigin( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_Y_MIN, 0 )
     planeSource.SetPoint1( PerkEvaluatorMetric.IMAGE_X_MAX, PerkEvaluatorMetric.IMAGE_Y_MIN, 0 )
     planeSource.SetPoint2( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_Y_MAX, 0 )
     planeSource.Update()
-    
     self.planePolyData = planeSource.GetOutput()
     
-    self.sweptPolyData = vtk.vtkAppendPolyData()
+  def SetAnatomy( self, role, node ):   
+    if ( role == "OutputModel" ):
+      node.SetAndObservePolyData( self.outputPolyData )
+      if ( node.GetModelDisplayNode() is None ):
+        node.CreateDefaultDisplayNodes()
+      modelDisplayNode = node.GetModelDisplayNode()
+      modelDisplayNode.FrontfaceCullingOff()
+      modelDisplayNode.BackfaceCullingOff() 
+      return True
+      
+    return False
     
-    sweepModel = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelNode" )
-    sweepModel.SetAndObservePolyData( self.sweptPolyData.GetOutput() )
-    sweepModel.SetName( "UltrasoundSweep" )
-    sweepModel.SetScene( slicer.mrmlScene )
-  
-    sweepModelDisplay = slicer.mrmlScene.CreateNodeByClass( "vtkMRMLModelDisplayNode" )
-    sweepModelDisplay.FrontfaceCullingOff()
-    sweepModelDisplay.BackfaceCullingOff()
-    sweepModelDisplay.SetScene( slicer.mrmlScene )
-    sweepModelDisplay.SetInputPolyDataConnection( sweepModel.GetPolyDataConnection() )
-  
-    slicer.mrmlScene.AddNode( sweepModelDisplay )
-    slicer.mrmlScene.AddNode( sweepModel )
-  
-    sweepModel.SetAndObserveDisplayNodeID( sweepModelDisplay.GetID() )
-    
-  def AddAnatomyRole( self, role, node ):
-    pass
-
-    
-  def AddTimestamp( self, time, matrix, point ):
-  
+  def AddTimestamp( self, time, matrix, point, role ):  
     worldTransform = vtk.vtkTransform()
     worldTransform.SetMatrix( matrix )
   
@@ -70,9 +62,5 @@ class PerkEvaluatorMetric:
     planeSweepTransformPolyData.SetInputData( self.planePolyData )
     planeSweepTransformPolyData.Update()
   
-    self.sweptPolyData.AddInputData( planeSweepTransformPolyData.GetOutput() )
-    self.sweptPolyData.Update()  
-
-    
-  def GetMetric( self ):
-    return 0
+    self.outputPolyData.AddInputData( planeSweepTransformPolyData.GetOutput() )
+    self.outputPolyData.Update()

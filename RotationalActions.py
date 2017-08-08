@@ -1,7 +1,8 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class RotationalActions( PerkEvaluatorMetric ):
 
   # Note: An action is defined as a time period where the absolute angular velocity of motion is greater than some threshold
   ANGULAR_VELOCITY_THRESHOLD = 50 #deg/s
@@ -16,30 +17,19 @@ class PerkEvaluatorMetric:
   def GetMetricUnit():
     return "count"
     
-  @staticmethod
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-    
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
-    
     
   # Instance methods  
   def __init__( self ):
-    self.numActions = 0
+    PerkEvaluatorMetric.__init__( self )
     
+    self.numActions = 0    
     self.actionState = 0
     self.completeActionTime = 0
     
     self.timePrev = None
     self.matrixPrev = None
-    
-  def AddAnatomyRole( self, role, node ):
-    pass
        
-  def AddTimestamp( self, time, matrix, point ):
-  
+  def AddTimestamp( self, time, matrix, point, role ):  
     if ( time == self.timePrev ):
       return
     
@@ -69,12 +59,12 @@ class PerkEvaluatorMetric:
     currAngularVelocity[ 0 ] = currAngularVelocity[ 0 ] / ( time - self.timePrev )
     
     currAbsAngularVelocity = abs( currAngularVelocity[ 0 ] )    
-    currentTestState = ( currAbsAngularVelocity > PerkEvaluatorMetric.ANGULAR_VELOCITY_THRESHOLD )
+    currentTestState = ( currAbsAngularVelocity > RotationalActions.ANGULAR_VELOCITY_THRESHOLD )
     
     if ( currentTestState == self.actionState ):
       self.completeActionTime = time
     else:
-      if ( ( time - self.completeActionTime ) > PerkEvaluatorMetric.TIME_THRESHOLD ):
+      if ( ( time - self.completeActionTime ) > RotationalActions.TIME_THRESHOLD ):
         self.actionState = currentTestState
         self.completeActionTime = time
         if ( currentTestState == 1 ):

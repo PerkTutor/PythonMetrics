@@ -1,7 +1,8 @@
 import math
 import vtk
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class RotationTotal( PerkEvaluatorMetric ):
 
   # Static methods
   @staticmethod
@@ -12,25 +13,15 @@ class PerkEvaluatorMetric:
   def GetMetricUnit():
     return "deg"
     
-  @staticmethod
-  def GetAcceptedTransformRoles():
-    return [ "Any" ]
-    
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
-    
     
   # Instance methods  
   def __init__( self ):
+    PerkEvaluatorMetric.__init__( self )
+  
     self.rotationTotal = 0
     self.matrixPrev = None
     
-  def AddAnatomyRole( self, role, node ):
-    pass
-    
-  def AddTimestamp( self, time, matrix, point ):
-  
+  def AddTimestamp( self, time, matrix, point, role ):  
     if ( self.matrixPrev == None or self.matrixPrev == None ):
       self.matrixPrev = vtk.vtkMatrix4x4()
       self.matrixPrev.DeepCopy( matrix )

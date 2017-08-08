@@ -1,8 +1,8 @@
 import math
 import vtk
-import slicer
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PerkEvaluatorMetric:
+class PercentTargetsHit( PerkEvaluatorMetric ):
 
   # A structure is "in" the imaging plane if it is within some small threshold of the plane
   IMAGE_PLANE_THRESHOLD = 5 #mm (since scaling should be uniform)
@@ -22,35 +22,29 @@ class PerkEvaluatorMetric:
     return "%"
   
   @staticmethod
-  def GetAcceptedTransformRoles():
+  def GetTransformRoles():
     return [ "Ultrasound" ]
   
   @staticmethod
-  def GetRequiredAnatomyRoles():
+  def GetAnatomyRoles():
     return { "POIs": "vtkMRMLMarkupsFiducialNode" }
     
     
   # Instance methods    
   def __init__( self ):
-    pass
+    PerkEvaluatorMetric.__init__( self )
     
-  def AddAnatomyRole( self, role, node ):
-    if ( node == None or self.GetRequiredAnatomyRoles()[ role ] != node.GetClassName() ):
-      return False
-    
+  def SetAnatomy( self, role, node ):   
     if ( role == "POIs" ):
       self.targets = node  
-      self.hitTargets = [ 0 ] * self.targets.GetNumberOfFiducials()
-      
+      self.hitTargets = [ 0 ] * self.targets.GetNumberOfFiducials()      
       return True
       
     return False
 
     
-  def AddTimestamp( self, time, matrix, point ):
-  
-    for i in range( self.targets.GetNumberOfFiducials() ):
-    
+  def AddTimestamp( self, time, matrix, point, role ):  
+    for i in range( self.targets.GetNumberOfFiducials() ):    
       # Find the centre of the fiducial
       centerPoint = [ 0, 0, 0 ]
       self.targets.GetNthFiducialPosition( i, centerPoint )
@@ -67,17 +61,17 @@ class PerkEvaluatorMetric:
       RASToImageMatrix.MultiplyPoint( centerPoint_RAS, centerPoint_Image )
     
       # Assumption is the imaging plane is in the Image coordinate system's XY plane    
-      if ( centerPoint_Image[0] < PerkEvaluatorMetric.IMAGE_X_MIN or centerPoint_Image[0] > PerkEvaluatorMetric.IMAGE_X_MAX ):
+      if ( centerPoint_Image[0] < PercentTargetsHit.IMAGE_X_MIN or centerPoint_Image[0] > PercentTargetsHit.IMAGE_X_MAX ):
         return
       
-      if ( centerPoint_Image[1] < PerkEvaluatorMetric.IMAGE_Y_MIN or centerPoint_Image[1] > PerkEvaluatorMetric.IMAGE_Y_MAX ):
+      if ( centerPoint_Image[1] < PercentTargetsHit.IMAGE_Y_MIN or centerPoint_Image[1] > PercentTargetsHit.IMAGE_Y_MAX ):
         return
     
       # Note: This only works for similarity matrix (i.e. uniform scale factor)
       scaleFactor = math.pow( vtk.vtkMatrix4x4().Determinant( matrix ), 1.0 / 3.0 )
     
       # Now check if the z-coordinate of the point in the image coordinate system is below some threshold value (i.e. 2mm)
-      if ( abs( centerPoint_Image[2] ) < PerkEvaluatorMetric.IMAGE_PLANE_THRESHOLD / scaleFactor ):
+      if ( abs( centerPoint_Image[2] ) < PercentTargetsHit.IMAGE_PLANE_THRESHOLD / scaleFactor ):
         self.hitTargets[ i ] = 1
     
     
