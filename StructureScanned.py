@@ -4,12 +4,6 @@ from PythonMetricsCalculator import PerkEvaluatorMetric
 
 class StructureScanned( PerkEvaluatorMetric ):
 
-  # Image extent
-  IMAGE_X_MIN = 173 #pixels
-  IMAGE_X_MAX = 793 #pixels
-  IMAGE_Y_MIN = 153 #pixels
-  IMAGE_Y_MAX = 625 #pixels
-
   # Static methods
   @staticmethod
   def GetMetricName():
@@ -25,7 +19,7 @@ class StructureScanned( PerkEvaluatorMetric ):
   
   @staticmethod  
   def GetAnatomyRoles():
-    return { "Target": "vtkMRMLModelNode" }
+    return { "Target": "vtkMRMLModelNode", "Image": "vtkMRMLVolumeNode" }
     
     
   # Instance methods  
@@ -34,6 +28,11 @@ class StructureScanned( PerkEvaluatorMetric ):
   
     self.structureScanned = False
     
+    self.imageMinX = 0
+    self.imageMaxX = 0
+    self.imageMinY = 0
+    self.imageMaxY = 0
+    
   def SetAnatomy( self, role, node ):
     if ( role == "Target" and node.GetPolyData() != None ):
       self.targetNode = node
@@ -41,7 +40,17 @@ class StructureScanned( PerkEvaluatorMetric ):
       self.bspTree.SetDataSet( self.targetNode.GetPolyData() )
       self.bspTree.BuildLocator()      
       return True
-      
+ 
+    if ( role == "Image" ):
+      imageData = node.GetImageData()
+      if ( imageData is None ):
+        return False
+      imageDimensions = [ 0, 0, 0 ]
+      imageData.GetDimensions( imageDimensions )
+      self.imageMaxX = imageDimensions[ 0 ]
+      self.imageMaxY = imageDimensions[ 1 ]
+      return True
+ 
     return False
     
   def AddTimestamp( self, time, matrix, point, role ):
@@ -56,10 +65,10 @@ class StructureScanned( PerkEvaluatorMetric ):
     
     # For each scan line
     # Assume the x-axis is equivalent to the marked-unmarked axis
-    for i in range( StructureScanned.IMAGE_X_MIN, StructureScanned.IMAGE_X_MAX ):
+    for i in range( self.imageMinX, self.imageMaxX ):
       # Find end points of the current scan line in the Image coordinate system
-      startPoint_Image = [ i, StructureScanned.IMAGE_Y_MIN, 0, 1 ]
-      endPoint_Image = [ i, StructureScanned.IMAGE_Y_MAX, 0, 1 ]
+      startPoint_Image = [ i, self.imageMinY, 0, 1 ]
+      endPoint_Image = [ i, self.imageMaxY, 0, 1 ]
       
       # Transform the end points into the RAS coordinate system
       startPoint_RAS = [ 0, 0, 0, 1 ]
@@ -85,4 +94,4 @@ class StructureScanned( PerkEvaluatorMetric ):
 
     
   def GetMetric( self ):
-    return self.structureScanned
+    return str( self.structureScanned )

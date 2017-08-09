@@ -4,12 +4,6 @@ from PythonMetricsCalculator import PerkEvaluatorMetric
 
 class ShowUltrasoundSweep( PerkEvaluatorMetric ):
 
-  # Get the image X and Y extents
-  IMAGE_X_MIN = 173 #pixels
-  IMAGE_X_MAX = 793 #pixels
-  IMAGE_Y_MIN = 153 #pixels
-  IMAGE_Y_MAX = 625 #pixels
-
   # Static methods
   @staticmethod
   def GetMetricName():
@@ -25,7 +19,7 @@ class ShowUltrasoundSweep( PerkEvaluatorMetric ):
     
   @staticmethod
   def GetAnatomyRoles():
-    return { "OutputModel": "vtkMRMLModelNode" }
+    return { "OutputModel": "vtkMRMLModelNode", "Image": "vtkMRMLVolumeNode" }
     
     
   # Instance methods  
@@ -34,16 +28,13 @@ class ShowUltrasoundSweep( PerkEvaluatorMetric ):
     
     self.outputPolyData = vtk.vtkAppendPolyData()
     
-    planeSource = vtk.vtkPlaneSource()
-    planeSource.SetOrigin( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_Y_MIN, 0 )
-    planeSource.SetPoint1( PerkEvaluatorMetric.IMAGE_X_MAX, PerkEvaluatorMetric.IMAGE_Y_MIN, 0 )
-    planeSource.SetPoint2( PerkEvaluatorMetric.IMAGE_X_MIN, PerkEvaluatorMetric.IMAGE_Y_MAX, 0 )
-    planeSource.Update()
-    self.planePolyData = planeSource.GetOutput()
+    self.planeSource = vtk.vtkPlaneSource()
+    self.planePolyData = self.planeSource.GetOutput()
+    
     
   def SetAnatomy( self, role, node ):   
     if ( role == "OutputModel" ):
-      node.SetAndObservePolyData( self.outputPolyData )
+      node.SetAndObservePolyData( self.outputPolyData.GetOutput() )
       if ( node.GetModelDisplayNode() is None ):
         node.CreateDefaultDisplayNodes()
       modelDisplayNode = node.GetModelDisplayNode()
@@ -51,6 +42,18 @@ class ShowUltrasoundSweep( PerkEvaluatorMetric ):
       modelDisplayNode.BackfaceCullingOff() 
       return True
       
+    if ( role == "Image" ):
+      imageData = node.GetImageData()
+      if ( imageData is None ):
+        return False
+      imageDimensions = [ 0, 0, 0 ]
+      imageData.GetDimensions( imageDimensions )
+      self.planeSource.SetOrigin( 0, 0, 0 )
+      self.planeSource.SetPoint1( imageDimensions[ 0 ], 0, 0 )
+      self.planeSource.SetPoint2( 0, imageDimensions[ 1 ], 0 )
+      self.planeSource.Update()
+      return True
+
     return False
     
   def AddTimestamp( self, time, matrix, point, role ):  
