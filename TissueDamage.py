@@ -54,8 +54,7 @@ class TissueDamage( PerkEvaluatorMetric ):
     return False 
     
     
-  def AddTimestamp( self, time, matrix, point ):
-
+  def AddTimestamp( self, time, matrix, point, role ):
     if ( self.tissueNode == None or self.matrixPrev == None or self.pointPrev == None ):
       self.matrixPrev = vtk.vtkMatrix4x4()
       self.matrixPrev.DeepCopy( matrix )
@@ -69,7 +68,7 @@ class TissueDamage( PerkEvaluatorMetric ):
       return
       
     # Find the base points (use needle orientation)
-    needleBase = [ x * - PerkEvaluatorMetric.NEEDLE_LENGTH for x in self.NeedleOrientation ] # Get the position of the needle's base in the oriented needle coordinate system
+    needleBase = [ x * - TissueDamage.NEEDLE_LENGTH for x in self.NeedleOrientation ] # Get the position of the needle's base in the oriented needle coordinate system
     needleBase.append( 1 ) # Add the element for homogeneous matrix transforms
     basePrev = [ 0, 0, 0, 1 ]
     baseCurr = [ 0, 0, 0, 1 ]
