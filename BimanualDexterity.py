@@ -1,12 +1,11 @@
 import math
 import vtk
-import slicer
+from PythonMetricsCalculator import PerkEvaluatorMetric
 
 # Adapted from: Hofstad et al., A study of psychomotor skills in minimally invasive surgery: what differentiates expert and nonexpert performance, Surgical Endoscopy, 2013.
-class PerkEvaluatorMetric:
+class BimanualDexterity( PerkEvaluatorMetric ):
 
   # Static methods
-
   @staticmethod
   def GetMetricName():
     return "Bimanual Dexterity: Translational & Rotational"
@@ -16,7 +15,7 @@ class PerkEvaluatorMetric:
     return "rho"
     
   @staticmethod
-  def GetMetricPervasive():
+  def IsShared():
     return False
     
   @staticmethod
@@ -24,17 +23,12 @@ class PerkEvaluatorMetric:
     return False
   
   @staticmethod  
-  def GetAcceptedTransformRoles():
+  def GetTransformRoles():
     return [ "LeftTool", "RightTool" ]
-  
-  @staticmethod
-  def GetRequiredAnatomyRoles():
-    return {}
     
 
 
-  # Instance methods
-  
+  # Instance methods  
   def __init__( self ):
     self.prevLeftInverseMatrix = None
     self.prevRightInverseMatrix = None
