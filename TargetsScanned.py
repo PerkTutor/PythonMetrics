@@ -2,7 +2,7 @@ import math
 import vtk
 from PythonMetricsCalculator import PerkEvaluatorMetric
 
-class PercentTargetsHit( PerkEvaluatorMetric ):
+class TargetsScanned( PerkEvaluatorMetric ):
 
   # A structure is "in" the imaging plane if it is within some small threshold of the plane
   IMAGE_PLANE_THRESHOLD = 5 #mm (since scaling should be uniform)
@@ -11,7 +11,7 @@ class PercentTargetsHit( PerkEvaluatorMetric ):
   # Static methods
   @staticmethod
   def GetMetricName():
-    return "Targets Hit"
+    return "Targets Scanned"
   
   @staticmethod  
   def GetMetricUnit():
@@ -82,7 +82,7 @@ class PercentTargetsHit( PerkEvaluatorMetric ):
       scaleFactor = math.pow( matrix.Determinant(), 1.0 / 3.0 )
     
       # Now check if the z-coordinate of the point in the image coordinate system is below some threshold value (i.e. 2mm)
-      if ( abs( currTargetPosition_Image[2] ) < PercentTargetsHit.IMAGE_PLANE_THRESHOLD / scaleFactor ):
+      if ( abs( currTargetPosition_Image[2] ) < TargetsScanned.IMAGE_PLANE_THRESHOLD / scaleFactor ):
         self.hitTargets[ i ] = 1
     
     
